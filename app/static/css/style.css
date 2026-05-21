@@ -1,0 +1,73 @@
+:root {
+  --teal: #028090;
+  --teal-dark: #015F6B;
+  --teal-light: #02A8BC;
+  --mint: #02C39A;
+  --text: #1A3035;
+}
+
+body {
+    color: var(--text);
+    background-color: #f8f9fa;
+}
+
+.bg-teal-dark {
+    background-color: var(--teal-dark) !important;
+}
+
+.text-teal {
+    color: var(--teal) !important;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+    color: white !important;
+}
+
+.btn-teal {
+    background-color: var(--teal);
+    color: white;
+    border: none;
+}
+
+.btn-teal:hover {
+    background-color: var(--teal-dark);
+    color: white;
+}
+
+.stat-card {
+    border: none;
+    border-top: 4px solid var(--teal);
+    transition: box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.table-teal {
+    background-color: var(--teal);
+    color: white;
+}
+
+.alert {
+    border-radius: 0.5rem;
+    margin-bottom: 10px;
+}
+
+table tr:hover {
+    background-color: rgba(2, 128, 144, 0.05);
+}
+
+footer {
+    background-color: var(--teal-dark);
+    color: white;
+    padding: 20px 0;
+}

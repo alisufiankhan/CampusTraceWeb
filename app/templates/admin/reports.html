@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>System Report</h2>
+    <span class="text-muted">Generated: Today</span>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-12 col-md-4">
+        <div class="card stat-card h-100 p-3">
+            <h5 class="text-muted">Total Items</h5>
+            <h3 class="text-teal mb-0">{{ report.total }}</h3>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card stat-card h-100 p-3">
+            <h5 class="text-muted">Total Claims</h5>
+            <h3 class="text-teal mb-0">0</h3>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card stat-card h-100 p-3">
+            <h5 class="text-muted">Items Returned</h5>
+            <h3 class="text-teal mb-0">{{ report.by_status.get('Returned', 0) }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="mb-5">
+    <h4>Items by Status</h4>
+    <div class="table-responsive mt-3">
+        <table class="table table-hover table-bordered">
+            <thead class="table-teal">
+                <tr>
+                    <th>Status</th>
+                    <th>Count</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for status, count in report.by_status.items() %}
+                <tr>
+                    <td>{{ status }}</td>
+                    <td>{{ count }}</td>
+                    <td>
+                        {% if report.total > 0 %}
+                            {{ (count / report.total * 100) | round(1) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div>
+    <h4>Expired Items</h4>
+    {% if report.expired %}
+    <div class="table-responsive mt-3">
+        <table class="table table-hover table-bordered">
+            <thead class="table-teal">
+                <tr>
+                    <th>Item ID</th>
+                    <th>Description</th>
+                    <th>Date Found</th>
+                    <th>Location</th>
+                    <th>Days Since Found</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in report.expired %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.date_found }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>N/A</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <p class="text-muted mb-0">No expired items</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-4">
+    <h2>Welcome, {{ current_user.name }}</h2>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Roll Number:</strong> {{ current_user.roll_number }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Department:</strong> {{ current_user.dept }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if current_user.is_flagged %}
+<div class="alert alert-danger" role="alert">
+    <strong>Warning!</strong> Your account has been flagged due to multiple rejected claims. Please contact admin.
+</div>
+{% endif %}
+
+<div class="row g-4 mb-5">
+    <div class="col-12 col-md-4">
+        <div class="card stat-card h-100 p-3 text-center">
+            <h5 class="text-muted">My Total Claims</h5>
+            <h3 class="text-teal mb-0">{{ claims_count }}</h3>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card stat-card h-100 p-3 text-center" style="border-top-color: #fd7e14;">
+            <h5 class="text-muted">Pending Claims</h5>
+            <h3 class="mb-0" style="color: #fd7e14;">0</h3>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card stat-card h-100 p-3 text-center" style="border-top-color: #198754;">
+            <h5 class="text-muted">Approved Claims</h5>
+            <h3 class="text-success mb-0">0</h3>
+        </div>
+    </div>
+</div>
+
+<div>
+    <h4>Quick Actions</h4>
+    <div class="d-flex gap-3 mt-3 flex-wrap">
+        <a href="#" class="btn btn-teal">Search for Items</a>
+        <a href="#" class="btn btn-teal">My Claims</a>
+        <a href="#" class="btn btn-teal">Submit a Claim</a>
+    </div>
+</div>
+{% endblock %}
