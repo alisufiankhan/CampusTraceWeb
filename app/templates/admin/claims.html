@@ -64,20 +64,20 @@
                                 </div>
                             </div>
                         </td>
-                        <td><span class="small text-muted">{{ claim.date_submitted }}</span></td>
+                        <td><span class="small text-muted">{{ claim.date_submitted.strftime('%b %d, %Y %H:%M') }}</span></td>
                         <td class="text-end pe-4">
                             <div class="d-flex justify-content-end gap-2">
-                                <form method="POST" action="{{ url_for('claims.approve', claim_id=claim.id) }}">
+                                <form method="POST" action="{{ url_for('claims.approve', claim_id=claim.claim_id) }}">
                                     <button type="submit" class="btn btn-success btn-sm" title="Approve" data-bs-toggle="tooltip">
                                         <i class="fas fa-check"></i>
                                     </button>
                                 </form>
-                                <form method="POST" action="{{ url_for('claims.reject', claim_id=claim.id) }}">
+                                <form method="POST" action="{{ url_for('claims.reject', claim_id=claim.claim_id) }}">
                                     <button type="submit" class="btn btn-danger btn-sm" title="Reject" data-bs-toggle="tooltip">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </form>
-                                <form method="POST" action="{{ url_for('claims.dispute', claim_id=claim.id) }}">
+                                <form method="POST" action="{{ url_for('claims.dispute', claim_id=claim.claim_id) }}">
                                     <button type="submit" class="btn btn-warning btn-sm text-dark" title="Dispute" data-bs-toggle="tooltip">
                                         <i class="fas fa-balance-scale"></i>
                                     </button>
@@ -132,7 +132,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for claim in claims %}
+                            {% for claim in all_claims %}
                             <tr class="{% if claim.status == 'Approved' %}border-start border-4 border-success{% elif claim.status == 'Rejected' %}border-start border-4 border-danger{% elif claim.status == 'Disputed' %}border-start border-4 border-warning{% endif %}">
                                 <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
                                 <td>{{ claim.person.name }}</td>
@@ -140,7 +140,7 @@
                                 <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
                                 <td class="text-end pe-4">
                                     {% if claim.status == 'Approved' and claim.item.status != 'Returned' %}
-                                    <a href="{{ url_for('claims.handover', claim_id=claim.id) }}" class="btn btn-sm btn-teal fw-bold">
+                                    <a href="{{ url_for('claims.handover', claim_id=claim.claim_id) }}" class="btn btn-sm btn-teal fw-bold">
                                         <i class="fas fa-handshake me-1"></i> Process Handover
                                     </a>
                                     {% else %}
@@ -173,7 +173,7 @@
                         </thead>
                         <tbody>
                             {% set count = 0 %}
-                            {% for claim in claims if claim.status == status %}
+                            {% for claim in all_claims if claim.status == status %}
                             {% set count = count + 1 %}
                             <tr class="border-start border-4 {% if status == 'Approved' %}border-success{% elif status == 'Rejected' %}border-danger{% elif status == 'Disputed' %}border-warning{% endif %}">
                                 <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
@@ -182,7 +182,7 @@
                                 <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
                                 <td class="text-end pe-4">
                                     {% if claim.status == 'Approved' and claim.item.status != 'Returned' %}
-                                    <a href="{{ url_for('claims.handover', claim_id=claim.id) }}" class="btn btn-sm btn-teal fw-bold">
+                                    <a href="{{ url_for('claims.handover', claim_id=claim.claim_id) }}" class="btn btn-sm btn-teal fw-bold">
                                         <i class="fas fa-handshake me-1"></i> Process Handover
                                     </a>
                                     {% else %}
