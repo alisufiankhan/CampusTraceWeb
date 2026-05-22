@@ -20,29 +20,41 @@
 
 <div class="row g-4 mb-5">
     <div class="col-12 col-md-4">
-        <div class="stat-card stat-teal">
-            <div class="stat-icon"><i class="fas fa-list-ul"></i></div>
-            <div class="stat-details">
-                <div class="stat-label">Total Claims</div>
-                <div class="stat-number">{{ claims_count|default(0) }}</div>
+        <div class="card border-0 shadow-sm h-100" style="border-radius: var(--radius);">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-teal text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px; font-size: 24px;">
+                    <i class="fas fa-list-ul"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-bold text-uppercase mb-1">Total Claims</div>
+                    <div class="fs-2 fw-bold text-dark lh-1">{{ claims_count|default(0) }}</div>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-4">
-        <div class="stat-card stat-orange">
-            <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-            <div class="stat-details">
-                <div class="stat-label">Pending Claims</div>
-                <div class="stat-number">0</div>
+        <div class="card border-0 shadow-sm h-100" style="border-radius: var(--radius);">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px; font-size: 24px;">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-bold text-uppercase mb-1">Pending Claims</div>
+                    <div class="fs-2 fw-bold text-dark lh-1">0</div>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-4">
-        <div class="stat-card stat-mint">
-            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-            <div class="stat-details">
-                <div class="stat-label">Approved Claims</div>
-                <div class="stat-number">0</div>
+        <div class="card border-0 shadow-sm h-100" style="border-radius: var(--radius);">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px; font-size: 24px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-bold text-uppercase mb-1">Approved Claims</div>
+                    <div class="fs-2 fw-bold text-dark lh-1">0</div>
+                </div>
             </div>
         </div>
     </div>

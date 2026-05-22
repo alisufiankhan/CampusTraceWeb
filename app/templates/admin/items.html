@@ -160,7 +160,23 @@
                             {% endif %}
                         </td>
                         <td>
-                            <span class="badge badge-{{ item.status|lower }}">{{ item.status }}</span>
+                            {% if item.status == 'Found' %}
+                                <span class="badge bg-info text-dark">Found</span>
+                            {% elif item.status == 'UnderReview' %}
+                                <span class="badge bg-warning text-dark">UnderReview</span>
+                            {% elif item.status == 'PendingVerification' %}
+                                <span class="badge bg-warning text-dark">PendingVerification</span>
+                            {% elif item.status == 'Claimed' %}
+                                <span class="badge bg-primary text-white">Claimed</span>
+                            {% elif item.status == 'Returned' %}
+                                <span class="badge bg-success text-white">Returned</span>
+                            {% elif item.status == 'Disputed' %}
+                                <span class="badge bg-danger text-white">Disputed</span>
+                            {% elif item.status == 'Expired' %}
+                                <span class="badge bg-secondary text-white">Expired</span>
+                            {% else %}
+                                <span class="badge bg-dark text-white">{{ item.status }}</span>
+                            {% endif %}
                         </td>
                         <td class="text-end pe-4">
                             {% if item.is_expired() and item.status == 'Found' %}

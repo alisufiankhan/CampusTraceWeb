@@ -137,7 +137,19 @@
                                 <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
                                 <td>{{ claim.person.name }}</td>
                                 <td>{{ claim.item.desc }}</td>
-                                <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
+                                <td>
+                                    {% if claim.status == 'Pending' %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% elif claim.status == 'Approved' %}
+                                        <span class="badge bg-success text-white">Approved</span>
+                                    {% elif claim.status == 'Rejected' %}
+                                        <span class="badge bg-danger text-white">Rejected</span>
+                                    {% elif claim.status == 'Disputed' %}
+                                        <span class="badge bg-danger text-white">Disputed</span>
+                                    {% else %}
+                                        <span class="badge bg-dark text-white">{{ claim.status }}</span>
+                                    {% endif %}
+                                </td>
                                 <td class="text-end pe-4">
                                     {% if claim.status == 'Approved' and claim.item.status != 'Returned' %}
                                     <a href="{{ url_for('claims.handover', claim_id=claim.claim_id) }}" class="btn btn-sm btn-teal fw-bold">
@@ -179,7 +191,19 @@
                                 <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
                                 <td>{{ claim.person.name }}</td>
                                 <td>{{ claim.item.desc }}</td>
-                                <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
+                                <td>
+                                    {% if claim.status == 'Pending' %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% elif claim.status == 'Approved' %}
+                                        <span class="badge bg-success text-white">Approved</span>
+                                    {% elif claim.status == 'Rejected' %}
+                                        <span class="badge bg-danger text-white">Rejected</span>
+                                    {% elif claim.status == 'Disputed' %}
+                                        <span class="badge bg-danger text-white">Disputed</span>
+                                    {% else %}
+                                        <span class="badge bg-dark text-white">{{ claim.status }}</span>
+                                    {% endif %}
+                                </td>
                                 <td class="text-end pe-4">
                                     {% if claim.status == 'Approved' and claim.item.status != 'Returned' %}
                                     <a href="{{ url_for('claims.handover', claim_id=claim.claim_id) }}" class="btn btn-sm btn-teal fw-bold">
