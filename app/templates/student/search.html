@@ -1,4 +1,155 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Amina Shafique - Search Page -->
+<style>
+/* Scoped overrides for hero section to break out of container padding */
+.search-hero {
+    margin: -1.5rem -1.5rem 2rem -1.5rem;
+    padding: 4rem 1.5rem;
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    border-radius: var(--radius);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.search-hero::before {
+    content: "\f002";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    font-size: 20rem;
+    color: rgba(255,255,255,0.03);
+    right: -2rem;
+    top: -4rem;
+    transform: rotate(15deg);
+}
+@media (min-width: 768px) {
+    .search-hero { margin-top: -1.5rem; border-radius: var(--radius); }
+}
+</style>
+
+<div class="search-hero shadow-sm">
+    <h2 class="fw-bold mb-2" style="font-size: 2.5rem; letter-spacing: -1px;">Find Your Lost Item</h2>
+    <p class="opacity-75 mb-4" style="font-size: 1.1rem;">Search through all registered found items on campus</p>
+    
+    <div class="mx-auto" style="max-width: 600px; position: relative; z-index: 1;">
+        <form method="POST" action="{{ url_for('items.search') }}">
+            <div class="input-group input-group-lg shadow-lg" style="border-radius: 50px; overflow: hidden; background: white;">
+                <span class="input-group-text bg-white border-0 text-teal ps-4 pe-2"><i class="fas fa-search"></i></span>
+                <input type="text" name="keyword" class="form-control border-0 px-2" placeholder="Search by keyword, brand, location..." value="{{ keyword }}" required style="box-shadow: none;">
+                <button type="submit" class="btn btn-teal px-4 fw-bold" style="border-radius: 0 50px 50px 0;">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if keyword %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="badge bg-teal-pale text-teal px-3 py-2 rounded-pill fs-6 border border-teal" style="background: var(--teal-pale);">
+        <i class="fas fa-filter me-2"></i> {{ results|length }} items found for "{{ keyword }}"
+    </div>
+    
+    <div class="d-flex gap-2">
+        <span class="badge bg-secondary bg-opacity-10 text-dark px-3 py-2 rounded-pill border">All</span>
+        <span class="badge bg-secondary bg-opacity-10 text-dark px-3 py-2 rounded-pill border">Electronic</span>
+        <span class="badge bg-secondary bg-opacity-10 text-dark px-3 py-2 rounded-pill border">Document</span>
+        <span class="badge bg-secondary bg-opacity-10 text-dark px-3 py-2 rounded-pill border">Personal</span>
+    </div>
+</div>
+
+{% if results|length == 0 %}
+<div class="empty-state card border-0 shadow-sm">
+    <i class="fas fa-search-minus"></i>
+    <h5>No items found</h5>
+    <p>Try different keywords or check back later</p>
+</div>
+{% else %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for item in results %}
+    <div class="col">
+        <div class="item-card position-relative">
+            <div class="item-type-bar {{ item.item_type }}"></div>
+            <div class="item-card-body d-flex flex-column h-100">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="item-type-icon {{ item.item_type }} shadow-sm">
+                        {% if item.item_type == 'electronic' %}<i class="fas fa-mobile-alt"></i>
+                        {% elif item.item_type == 'document' %}<i class="fas fa-file-alt"></i>
+                        {% elif item.item_type == 'personal' %}<i class="fas fa-shopping-bag"></i>{% endif %}
+                    </div>
+                    <span class="badge badge-{{ item.status|lower }}">{{ item.status }}</span>
+                </div>
+                
+                <h5 class="item-desc text-dark">{{ item.desc }}</h5>
+                
+                <div class="mb-3">
+                    <div class="item-meta"><i class="fas fa-map-marker-alt text-teal" style="width: 16px;"></i> {{ item.location }}</div>
+                    <div class="item-meta"><i class="fas fa-calendar-alt text-teal" style="width: 16px;"></i> {{ item.date_found }}</div>
+                </div>
+                
+                <div class="bg-light p-3 rounded mb-4 flex-grow-1 border">
+                    {% if item.item_type == 'electronic' %}
+                        <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Brand:</span> <span class="fw-bold small">{{ item.brand or 'N/A' }}</span></div>
+                        <div class="d-flex justify-content-between"><span class="text-muted small">Serial:</span> <span class="fw-bold small">{{ item.serial_number or 'N/A' }}</span></div>
+                    {% elif item.item_type == 'document' %}
+                        <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Type:</span> <span class="fw-bold small">{{ item.doc_type or 'N/A' }}</span></div>
+                        <div class="d-flex justify-content-between"><span class="text-muted small">Issued By:</span> <span class="fw-bold small">{{ item.issued_by or 'N/A' }}</span></div>
+                    {% elif item.item_type == 'personal' %}
+                        <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Color:</span> <span class="fw-bold small">{{ item.item_color or 'N/A' }}</span></div>
+                        <div class="d-flex justify-content-between"><span class="text-muted small">Material:</span> <span class="fw-bold small">{{ item.material or 'N/A' }}</span></div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-auto">
+                    {% if current_user.role == 'student' and item.status == 'Found' %}
+                        <button class="btn btn-teal w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#claimModal" data-item-id="{{ item.id }}" data-item-desc="{{ item.desc }}" data-item-type="{{ item.item_type }}">Claim This Item</button>
+                    {% else %}
+                        <button class="btn btn-light w-100 fw-bold border text-muted" disabled>{{ item.status }}</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
+<!-- Claim Modal -->
+<div class="modal fade" id="claimModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius);">
+      <div class="modal-header bg-teal text-white border-0" style="padding: 1.5rem;">
+        <h5 class="modal-title fw-bold"><i class="fas fa-hand-paper me-2"></i> Submit a Claim</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url_for('claims.submit') }}" method="POST">
+          <div class="modal-body p-4">
+            <div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded border">
+                <div class="bg-teal text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: 20px;">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-bold text-uppercase">Claiming Item</div>
+                    <div class="fw-bold text-dark fs-5" id="modalItemDesc">Item Description</div>
+                </div>
+            </div>
+            
+            <input type="hidden" id="modalItemId" name="item_id">
+            
+            <div class="mb-3">
+                <label for="proof" class="form-label d-flex justify-content-between">
+                    <span>Describe your proof of ownership</span>
+                    <span class="text-muted fw-normal"><span id="charCount">0</span>/1000</span>
+                </label>
+                <textarea class="form-control" id="proof" name="proof" rows="5" placeholder="Provide details like exact contents, serial numbers, passcodes, specific marks, or attach a link to a photo/receipt..." required maxlength="1000"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-0 p-3" style="border-radius: 0 0 var(--radius) var(--radius);">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-teal px-4 fw-bold"><i class="fas fa-paper-plane me-2"></i> Submit Claim</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,35 +1,125 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow">
-            <div class="card-body p-4 text-center">
-                <h2 class="text-teal fw-bold mb-2">CampusTrace</h2>
-                <p class="text-muted mb-4">Lost & Found Management System</p>
+<style>
+/* Override base layout for full screen login */
+body { background: white; }
+.navbar, footer { display: none; }
+.main-content { padding: 0 !important; }
+.container { max-width: 100% !important; padding: 0 !important; }
+</style>
+
+<div class="row g-0 vh-100">
+    <!-- Left Half (Hidden on mobile) -->
+    <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center text-white" 
+         style="background: linear-gradient(135deg, var(--teal-dark), var(--teal)); padding: 4rem;">
+        <div style="max-width: 400px; width: 100%;">
+            <i class="fas fa-map-marker-alt mb-4" style="font-size: 80px;"></i>
+            <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">CampusTrace</h1>
+            <p style="font-size: 1.1rem; opacity: 0.7; margin-bottom: 2.5rem;">Lost & Found Management</p>
+            
+            <hr style="border-top: 2px solid rgba(255,255,255,0.2); margin-bottom: 2.5rem;">
+            
+            <ul class="list-unstyled">
+                <li class="mb-3 d-flex align-items-center gap-3">
+                    <i class="fas fa-check-circle" style="color: var(--mint); font-size: 1.2rem;"></i>
+                    <span style="font-size: 1.1rem; font-weight: 500;">Formal claim process</span>
+                </li>
+                <li class="mb-3 d-flex align-items-center gap-3">
+                    <i class="fas fa-check-circle" style="color: var(--mint); font-size: 1.2rem;"></i>
+                    <span style="font-size: 1.1rem; font-weight: 500;">Item tracking & status</span>
+                </li>
+                <li class="d-flex align-items-center gap-3">
+                    <i class="fas fa-check-circle" style="color: var(--mint); font-size: 1.2rem;"></i>
+                    <span style="font-size: 1.1rem; font-weight: 500;">Full accountability</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Right Half -->
+    <div class="col-md-6 d-flex flex-column justify-content-center align-items-center bg-white position-relative" style="padding: 2rem;">
+        <!-- Show logo on mobile only -->
+        <div class="d-md-none text-center mb-4">
+            <i class="fas fa-map-marker-alt text-teal mb-2" style="font-size: 40px;"></i>
+            <h2 class="text-teal fw-bold">CampusTrace</h2>
+        </div>
+        
+        <div style="max-width: 380px; width: 100%;">
+            <!-- Flash messages for login page specifically -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show mb-4" role="alert">
+                            {% if category == 'success' %}<i class="fas fa-check-circle"></i>
+                            {% elif category == 'danger' or category == 'error' %}<i class="fas fa-exclamation-circle"></i>
+                            {% elif category == 'warning' %}<i class="fas fa-exclamation-triangle"></i>
+                            {% else %}<i class="fas fa-info-circle"></i>{% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <h2 style="font-weight: 800; font-size: 1.8rem; margin-bottom: 0.2rem; color: var(--text-dark);">Welcome back</h2>
+            <p class="text-muted mb-4 small">Sign in to your account to continue</p>
+            
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="mb-3">
+                    <label for="user_id" class="form-label d-none">User ID</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent"><i class="fas fa-id-card"></i></span>
+                        <input type="text" class="form-control" id="user_id" name="user_id" placeholder="User ID" required>
+                    </div>
+                </div>
                 
-                <form method="POST" action="{{ url_for('auth.login') }}">
-                    <div class="mb-3 text-start">
-                        <label for="user_id" class="form-label">User ID</label>
-                        <input type="text" class="form-control" id="user_id" name="user_id" required>
+                <div class="mb-3">
+                    <label for="password" class="form-label d-none">Password</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <button class="btn btn-outline-secondary border" type="button" id="togglePassword" style="border-left: none; border-color: var(--border);">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
-                    <div class="mb-3 text-start">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="mb-4 text-start">
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-select" id="role" name="role">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="role" class="form-label d-none">Role</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent"><i class="fas fa-user-tag"></i></span>
+                        <select class="form-select" id="role" name="role" required>
                             <option value="student">Student</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-teal w-100">Login</button>
-                </form>
-                <div class="mt-4">
-                    <small class="text-muted">Contact admin if you need access</small>
                 </div>
-            </div>
+                
+                <button type="submit" class="btn btn-teal btn-lg w-100 fw-bold py-3 mb-3">
+                    <i class="fas fa-sign-in-alt me-2"></i> Sign In
+                </button>
+                
+                <div class="text-center">
+                    <p class="text-muted small mb-0">Contact admin if you need access</p>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    
+    if(togglePassword && password) {
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    }
+});
+</script>
 {% endblock %}

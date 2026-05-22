@@ -1,4 +1,231 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Umama Khurram - Claims Page -->
+<div class="page-header">
+    <h1><i class="fas fa-file-alt"></i> Claim Management</h1>
+</div>
+
+<div class="card mb-5 border-0 shadow-sm border-start border-4 border-warning">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 text-dark">Pending Claims</h5>
+        <span class="badge bg-warning text-dark rounded-pill fs-6">{{ pending|length }} Pending</span>
+    </div>
+    
+    {% if pending|length == 0 %}
+    <div class="empty-state">
+        <i class="fas fa-check-circle text-success opacity-50"></i>
+        <h5>All claims have been reviewed</h5>
+        <p>No pending claims at the moment.</p>
+    </div>
+    {% else %}
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Claim ID</th>
+                        <th>Student</th>
+                        <th>Item</th>
+                        <th>Proof</th>
+                        <th>Date</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for claim in pending %}
+                    <tr class="border-start border-4 border-warning">
+                        <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
+                        <td>
+                            <div class="fw-bold">{{ claim.student.name }}</div>
+                            <div class="small text-muted">{{ claim.student.student_id }}</div>
+                        </td>
+                        <td>
+                            <div class="fw-bold">{{ claim.item.desc }}</div>
+                            <div class="small text-muted"><i class="fas fa-map-marker-alt"></i> {{ claim.item.location }}</div>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-light border text-teal" data-bs-toggle="modal" data-bs-target="#proofModal{{ claim.id }}">
+                                <i class="fas fa-eye me-1"></i> View Proof
+                            </button>
+                            
+                            <!-- Proof Modal -->
+                            <div class="modal fade" id="proofModal{{ claim.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content border-0 shadow" style="border-radius: var(--radius);">
+                                        <div class="modal-header bg-light border-0">
+                                            <h5 class="modal-title fw-bold">Proof of Ownership</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body p-4 bg-white text-dark" style="font-family: serif; font-size: 1.1rem; line-height: 1.6;">
+                                            <div class="p-3 bg-light rounded border-start border-4 border-teal mb-3">
+                                                "{{ claim.proof }}"
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="small text-muted">{{ claim.date_submitted }}</span></td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <form method="POST" action="{{ url_for('claims.approve', claim_id=claim.id) }}">
+                                    <button type="submit" class="btn btn-success btn-sm" title="Approve" data-bs-toggle="tooltip">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('claims.reject', claim_id=claim.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Reject" data-bs-toggle="tooltip">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('claims.dispute', claim_id=claim.id) }}">
+                                    <button type="submit" class="btn btn-warning btn-sm text-dark" title="Dispute" data-bs-toggle="tooltip">
+                                        <i class="fas fa-balance-scale"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom pt-4 pb-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0 text-dark">All Claims</h5>
+        </div>
+        
+        <!-- Tab Pills for Filtering -->
+        <ul class="nav nav-pills gap-2" id="claimsTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active bg-light text-dark fw-bold rounded-pill px-4 border" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">All</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link bg-light text-dark fw-bold rounded-pill px-4 border" id="approved-tab" data-bs-toggle="pill" data-bs-target="#approved" type="button" role="tab">Approved</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link bg-light text-dark fw-bold rounded-pill px-4 border" id="rejected-tab" data-bs-toggle="pill" data-bs-target="#rejected" type="button" role="tab">Rejected</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link bg-light text-dark fw-bold rounded-pill px-4 border" id="disputed-tab" data-bs-toggle="pill" data-bs-target="#disputed" type="button" role="tab">Disputed</button>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card-body p-0">
+        <div class="tab-content" id="claimsTabsContent">
+            <!-- All Tab Content -->
+            <div class="tab-pane fade show active" id="all" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Claim ID</th>
+                                <th>Student</th>
+                                <th>Item</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for claim in claims %}
+                            <tr class="{% if claim.status == 'Approved' %}border-start border-4 border-success{% elif claim.status == 'Rejected' %}border-start border-4 border-danger{% elif claim.status == 'Disputed' %}border-start border-4 border-warning{% endif %}">
+                                <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
+                                <td>{{ claim.student.name }}</td>
+                                <td>{{ claim.item.desc }}</td>
+                                <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
+                                <td class="text-end pe-4">
+                                    {% if claim.status == 'Approved' and claim.item.status != 'Returned' %}
+                                    <a href="{{ url_for('claims.handover', claim_id=claim.id) }}" class="btn btn-sm btn-teal fw-bold">
+                                        <i class="fas fa-handshake me-1"></i> Process Handover
+                                    </a>
+                                    {% else %}
+                                    <span class="text-muted small">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5" class="text-center py-4 text-muted">No claims history found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Other Tabs Content (Filtered via JS or manually rendered) -->
+            <!-- We'll replicate the table structure for each status but filter the rows with jinja -->
+            {% for status in ['Approved', 'Rejected', 'Disputed'] %}
+            <div class="tab-pane fade" id="{{ status|lower }}" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Claim ID</th>
+                                <th>Student</th>
+                                <th>Item</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set count = 0 %}
+                            {% for claim in claims if claim.status == status %}
+                            {% set count = count + 1 %}
+                            <tr class="border-start border-4 {% if status == 'Approved' %}border-success{% elif status == 'Rejected' %}border-danger{% elif status == 'Disputed' %}border-warning{% endif %}">
+                                <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
+                                <td>{{ claim.student.name }}</td>
+                                <td>{{ claim.item.desc }}</td>
+                                <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
+                                <td class="text-end pe-4">
+                                    {% if claim.status == 'Approved' and claim.item.status != 'Returned' %}
+                                    <a href="{{ url_for('claims.handover', claim_id=claim.id) }}" class="btn btn-sm btn-teal fw-bold">
+                                        <i class="fas fa-handshake me-1"></i> Process Handover
+                                    </a>
+                                    {% else %}
+                                    <span class="text-muted small">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if count == 0 %}
+                            <tr><td colspan="5" class="text-center py-4 text-muted">No {{ status|lower }} claims found.</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Style active tab correctly
+    const tabButtons = document.querySelectorAll('button[data-bs-toggle="pill"]');
+    tabButtons.forEach(btn => {
+        btn.addEventListener('shown.bs.tab', function (e) {
+            tabButtons.forEach(b => {
+                b.classList.remove('bg-teal', 'text-white');
+                b.classList.add('bg-light', 'text-dark');
+            });
+            e.target.classList.remove('bg-light', 'text-dark');
+            e.target.classList.add('bg-teal', 'text-white');
+        });
+    });
+    // Trigger initial state
+    document.getElementById('all-tab').classList.remove('bg-light', 'text-dark');
+    document.getElementById('all-tab').classList.add('bg-teal', 'text-white');
+    
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+});
+</script>
 {% endblock %}

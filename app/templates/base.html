@@ -3,72 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusTrace</title>
-    <!-- Bootstrap 5 CDN -->
+    <title>CampusTrace - Lost & Found Management</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom Style -->
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-teal-dark">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand text-teal fw-bold" href="#">CampusTrace</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" href="{{ url_for('auth.login') }}">
+                <i class="fas fa-map-marker-alt"></i>CampusTrace
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     {% if current_user.is_authenticated %}
                         {% if current_user.role == 'admin' %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.dashboard') }}">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Items</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Claims</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.reports') }}">Reports</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.flagged') }}">Flagged Students</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.dashboard') }}"><i class="fas fa-gauge"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('items.all_items') }}"><i class="fas fa-box-open"></i> Items</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('claims.admin_claims') }}"><i class="fas fa-file-alt"></i> Claims</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.reports') }}"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.flagged') }}"><i class="fas fa-flag"></i> Flagged Students</a></li>
                         {% elif current_user.role == 'student' %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student_routes.dashboard') }}">Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Search Items</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">My Claims</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student_routes.dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('items.search') }}"><i class="fas fa-search"></i> Search Items</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('claims.student_my_claims') }}"><i class="fas fa-list-check"></i> My Claims</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                        <li class="nav-item ms-lg-3"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        <li class="nav-item ms-lg-3 d-none d-lg-flex align-items-center gap-2">
+                            <span class="text-white-50 small">{{ current_user.name.split(' ')[0] }}</span>
+                            <div class="user-avatar">{{ current_user.name[0] }}</div>
+                        </li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Flash Messages -->
-    <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'error' else 'warning' if category == 'warning' else 'info' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
-
-    <!-- Content Block -->
-    <main class="container my-4 flex-grow-1">
-        {% block content %}{% endblock %}
+    <main class="main-content fade-in-up">
+        <div class="container py-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {% if category == 'success' %}<i class="fas fa-check-circle"></i>
+                            {% elif category == 'danger' or category == 'error' %}<i class="fas fa-exclamation-circle"></i>
+                            {% elif category == 'warning' %}<i class="fas fa-exclamation-triangle"></i>
+                            {% else %}<i class="fas fa-info-circle"></i>{% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-teal-dark text-white text-center py-4 mt-auto">
+    <footer>
         <div class="container">
-            <h5 class="mb-1">CampusTrace - Campus Lost & Found</h5>
-            <p class="mb-0">Manage lost items the right way</p>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <strong>CampusTrace</strong> <span class="ms-2 opacity-75">Lost & Found Management System</span>
+                </div>
+                <div class="col-md-6 text-md-end opacity-75">
+                    Built with OOP principles
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- Bootstrap & Custom JS -->
+    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

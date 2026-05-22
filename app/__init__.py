@@ -29,7 +29,23 @@ def create_app():
     app.register_blueprint(admin_routes)
     app.register_blueprint(student_routes)
 
-    # Amina and Umama will register items and claims blueprints here
+    @app.route('/')
+    def index():
+        from flask import redirect, url_for
+        return redirect(url_for('auth.login'))
+
+    from app.routes.items import items
+    app.register_blueprint(items)
+    
+    from app.routes.claims import claims
+    app.register_blueprint(claims)
+
+    from app.models.item import Item
+    from app.models.claim import Claim
+    from app.models.handover import Handover
+    from app.models.reward import Reward
+    from app.models.searchlog import SearchLog
+    from app.models.report import Report
 
     return app
 

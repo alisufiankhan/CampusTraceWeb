@@ -13,8 +13,12 @@ def require_admin():
 
 @admin_routes.route('/dashboard')
 def dashboard():
-    total_items = 0
-    pending_claims = 0
+    from app.models.claim import Claim
+    from app.models.item import Item
+    from app.models.student import Student
+    
+    total_items = Item.query.count()
+    pending_claims = Claim.query.filter_by(status="Pending").count()
     flagged_students = Student.query.filter_by(is_flagged=True).count()
     total_students = Student.query.count()
     

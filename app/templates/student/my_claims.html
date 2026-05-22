@@ -1,4 +1,95 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Umama Khurram - My Claims Page -->
+<div class="page-header">
+    <h1><i class="fas fa-list-check"></i> My Claims</h1>
+</div>
+
+{% if claims|length == 0 %}
+<div class="empty-state card border-0 shadow-sm">
+    <i class="fas fa-inbox"></i>
+    <h5>No claims yet</h5>
+    <p>You haven't submitted any claims for lost items.</p>
+    <div class="mt-4">
+        <a href="{{ url_for('items.search') }}" class="btn btn-teal btn-lg fw-bold px-5">
+            <i class="fas fa-search me-2"></i> Search Items
+        </a>
+    </div>
+</div>
+{% else %}
+<div class="row row-cols-1 row-cols-lg-2 g-4">
+    {% for claim in claims %}
+    <div class="col">
+        <div class="card h-100 border-0 shadow-sm timeline-card {{ claim.status|lower }}">
+            <div class="card-body">
+                <!-- Header row -->
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                    <span class="font-monospace text-muted small fw-bold">ID: {{ claim.claim_id }}</span>
+                    <span class="badge badge-{{ claim.status|lower }} fs-6">{{ claim.status }}</span>
+                </div>
+                
+                <!-- Item info -->
+                <div class="mb-4">
+                    <h5 class="fw-bold text-dark d-flex align-items-start gap-2 mb-2">
+                        <i class="fas fa-box text-teal mt-1"></i>
+                        {{ claim.item.desc }}
+                    </h5>
+                    <div class="text-muted small ms-4">
+                        <i class="fas fa-map-marker-alt me-1"></i> Found at {{ claim.item.location }}
+                    </div>
+                </div>
+                
+                <!-- Proof section -->
+                <div class="mb-4">
+                    <div class="text-muted small fw-bold text-uppercase mb-2">Your Proof</div>
+                    <div class="p-3 bg-light rounded" style="border-left: 3px solid var(--teal); font-style: italic;">
+                        "{{ claim.proof }}"
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center text-muted small mb-4">
+                    <i class="fas fa-clock me-2"></i> Submitted on {{ claim.date_submitted }}
+                </div>
+                
+                <!-- Status message box -->
+                <div class="mt-auto">
+                    {% if claim.status == 'Approved' %}
+                    <div class="alert alert-success alert-permanent mb-0 d-flex align-items-center gap-3">
+                        <i class="fas fa-check-circle fs-4"></i>
+                        <div>
+                            <strong class="d-block">Claim Approved!</strong>
+                            <span class="small">Visit the admin office with your ID for collection.</span>
+                        </div>
+                    </div>
+                    {% elif claim.status == 'Rejected' %}
+                    <div class="alert alert-danger alert-permanent mb-0 d-flex align-items-center gap-3">
+                        <i class="fas fa-times-circle fs-4"></i>
+                        <div>
+                            <strong class="d-block">Claim Rejected</strong>
+                            <span class="small">The proof provided did not match the item records.</span>
+                        </div>
+                    </div>
+                    {% elif claim.status == 'Pending' %}
+                    <div class="alert alert-warning alert-permanent mb-0 d-flex align-items-center gap-3">
+                        <i class="fas fa-hourglass-half fs-4"></i>
+                        <div>
+                            <strong class="d-block">Under Review</strong>
+                            <span class="small">An administrator is currently reviewing your claim.</span>
+                        </div>
+                    </div>
+                    {% elif claim.status == 'Disputed' %}
+                    <div class="alert alert-warning alert-permanent mb-0 d-flex align-items-center gap-3">
+                        <i class="fas fa-balance-scale fs-4"></i>
+                        <div>
+                            <strong class="d-block">Claim Disputed</strong>
+                            <span class="small">Multiple claims exist. Please visit the admin office to resolve.</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock %}

@@ -1,4 +1,166 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Amina Shafique - Items Page -->
+<div class="page-header">
+    <h1><i class="fas fa-box-open"></i> Item Management</h1>
+</div>
+
+<div class="card mb-5 border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+        <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+            <i class="fas fa-plus text-teal"></i> Register New Found Item
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('items.register') }}">
+            <div class="row mb-3 g-4">
+                <div class="col-md-6">
+                    <label class="form-label">Description</label>
+                    <textarea name="desc" class="form-control" rows="3" placeholder="Detailed description of the item..." required></textarea>
+                </div>
+                <div class="col-md-6 d-flex flex-column gap-3">
+                    <div>
+                        <label class="form-label">Location Found</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input type="text" name="location" class="form-control" placeholder="E.g., Library 2nd Floor" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Date Found</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="text" name="date_found" class="form-control" placeholder="DD-MM-YYYY" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Category</label>
+                    <select name="category" id="category" class="form-select" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="electronic">&#xf3ce; Electronic</option>
+                        <option value="document">&#xf15c; Document</option>
+                        <option value="personal">&#xf290; Personal</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="electronic_div" class="card mb-4 border-0 border-start border-4 border-teal bg-light" style="display: none;">
+                <div class="card-body row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Brand</label>
+                        <input type="text" name="brand" class="form-control" placeholder="Apple, Samsung, etc.">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Color</label>
+                        <input type="text" name="color" class="form-control" placeholder="Black, Silver...">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" name="serial_number" class="form-control" placeholder="Optional">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="document_div" class="card mb-4 border-0 border-start border-4 bg-light" style="border-left-color: var(--teal-light) !important; display: none;">
+                <div class="card-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Document Type</label>
+                        <input type="text" name="doc_type" class="form-control" placeholder="ID Card, Passport...">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Issued By</label>
+                        <input type="text" name="issued_by" class="form-control" placeholder="University, Govt...">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="personal_div" class="card mb-4 border-0 border-start border-4 bg-light" style="border-left-color: var(--purple) !important; display: none;">
+                <div class="card-body row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Color</label>
+                        <input type="text" name="item_color" class="form-control" placeholder="Blue, Red...">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Size</label>
+                        <input type="text" name="size" class="form-control" placeholder="S, M, L, XL...">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Material</label>
+                        <input type="text" name="material" class="form-control" placeholder="Leather, Plastic...">
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-teal btn-lg w-100 fw-bold"><i class="fas fa-save me-2"></i> Register Item</button>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+            <i class="fas fa-list text-teal"></i> Registered Items
+        </h5>
+        <span class="badge bg-teal rounded-pill fs-6">{{ items|length }} Items</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Item ID</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ item.item_id }}</span></td>
+                        <td class="fw-bold">{{ item.desc }}</td>
+                        <td><i class="fas fa-map-marker-alt text-muted me-1"></i> {{ item.location }}</td>
+                        <td>{{ item.date_found }}</td>
+                        <td>
+                            {% if item.item_type == 'electronic' %}
+                                <span class="badge" style="background: var(--teal-pale); color: var(--teal);"><i class="fas fa-mobile-alt me-1"></i> Electronic</span>
+                            {% elif item.item_type == 'document' %}
+                                <span class="badge" style="background: #E0F2FE; color: #0284C7;"><i class="fas fa-file-alt me-1"></i> Document</span>
+                            {% elif item.item_type == 'personal' %}
+                                <span class="badge" style="background: #F3E8FF; color: #7C3AED;"><i class="fas fa-shopping-bag me-1"></i> Personal</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ item.item_type }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ item.status|lower }}">{{ item.status }}</span>
+                        </td>
+                        <td class="text-end pe-4">
+                            {% if item.is_expired() and item.status == 'Found' %}
+                            <form method="POST" action="{{ url_for('items.expire', item_id=item.item_id) }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary" title="Mark as Expired">
+                                    <i class="fas fa-clock"></i>
+                                </button>
+                            </form>
+                            {% else %}
+                            <span class="text-muted small">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">No items registered yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
