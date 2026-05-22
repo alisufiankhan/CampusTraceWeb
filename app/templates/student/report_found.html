@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header border-0 pb-0">
+    <h1 class="mb-1">
+        <i class="fas fa-plus-circle"></i>
+        Report a Found Item
+    </h1>
+    <p>Found something on campus? Report it here so the owner can claim it.</p>
+</div>
+
+<div class="alert alert-info alert-permanent mb-4 shadow-sm border-0 d-flex align-items-center gap-3">
+    <i class="fas fa-info-circle fs-3 text-teal"></i>
+    <div>
+        <strong>Important</strong>
+        <div class="small">Your report will be reviewed by admin before going live. Please provide as much detail as possible.</div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <form method="POST" action="{{ url_for('items.report_found') }}" id="reportForm">
+            <!-- Row 1 -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Description <span class="text-danger">*</span></label>
+                    <textarea name="desc" class="form-control" rows="3" placeholder="Describe the item in detail..." required></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Where did you find it? <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                        <input type="text" name="location" class="form-control" placeholder="Building, floor, area..." required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Row 2 -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Date you found it <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        <input type="date" name="date_found" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Category <span class="text-danger">*</span></label>
+                    <select name="category" id="categorySelect" class="form-select" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="electronic">Electronic</option>
+                        <option value="document">Document</option>
+                        <option value="personal">Personal</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dynamic Fields Container -->
+            <div id="dynamicFields" class="p-4 bg-light rounded mb-4" style="display: none; border-left: 4px solid var(--teal);">
+                <!-- Electronic Fields -->
+                <div id="electronicFields" style="display: none;">
+                    <h6 class="fw-bold mb-3 text-teal"><i class="fas fa-laptop text-muted me-2"></i> Electronic Details</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Brand</label>
+                            <input type="text" name="brand" class="form-control" placeholder="E.g., Apple, Dell">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Color</label>
+                            <input type="text" name="color" class="form-control" placeholder="Device color">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Serial Number</label>
+                            <input type="text" name="serial_number" class="form-control" placeholder="If visible">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Fields -->
+                <div id="documentFields" style="display: none;">
+                    <h6 class="fw-bold mb-3 text-teal"><i class="fas fa-id-card text-muted me-2"></i> Document Details</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Document Type</label>
+                            <input type="text" name="doc_type" class="form-control" placeholder="E.g., ID Card, Passport">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Issued By</label>
+                            <input type="text" name="issued_by" class="form-control" placeholder="Organization name">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Fields -->
+                <div id="personalFields" style="display: none;">
+                    <h6 class="fw-bold mb-3 text-teal"><i class="fas fa-umbrella text-muted me-2"></i> Personal Item Details</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Color</label>
+                            <input type="text" name="item_color" class="form-control" placeholder="Primary color">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Size</label>
+                            <input type="text" name="size" class="form-control" placeholder="Small, Medium, etc.">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Material</label>
+                            <input type="text" name="material" class="form-control" placeholder="Leather, Plastic, etc.">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-3 bg-teal text-white rounded mb-4 d-flex align-items-center gap-3">
+                <i class="fas fa-exclamation-circle fs-3"></i>
+                <div class="small">By submitting this report, you confirm that you have the item and will hand it to admin for safekeeping.</div>
+            </div>
+
+            <div class="d-flex gap-3">
+                <button type="submit" class="btn btn-teal btn-lg flex-grow-1 fw-bold">
+                    <i class="fas fa-paper-plane me-2"></i> Submit Report
+                </button>
+                <a href="{{ url_for('items.my_reports') }}" class="btn btn-outline-teal btn-lg fw-bold px-4">
+                    View My Reports
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('categorySelect');
+    const dynamicFields = document.getElementById('dynamicFields');
+    const sections = {
+        'electronic': document.getElementById('electronicFields'),
+        'document': document.getElementById('documentFields'),
+        'personal': document.getElementById('personalFields')
+    };
+
+    categorySelect.addEventListener('change', function() {
+        const val = this.value;
+        
+        // Hide all first
+        Object.values(sections).forEach(sec => sec.style.display = 'none');
+        
+        if(val && sections[val]) {
+            dynamicFields.style.display = 'block';
+            sections[val].style.display = 'block';
+        } else {
+            dynamicFields.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

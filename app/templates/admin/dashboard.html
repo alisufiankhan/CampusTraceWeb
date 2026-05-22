@@ -45,6 +45,15 @@
             </div>
         </div>
     </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="stat-card stat-orange" style="background: linear-gradient(135deg, #F59E0B, #D97706); color: white;">
+            <div class="stat-icon" style="background: rgba(255,255,255,0.2);"><i class="fas fa-clipboard-check"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Pending Reports</div>
+                <div class="stat-number">{{ pending_reports }}</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row g-4 mb-5">
@@ -69,17 +78,33 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-lg-4">
                         <a href="{{ url_for('claims.admin_claims') }}" class="text-decoration-none">
                             <div class="card h-100 border-0 shadow-sm hover-elevate">
                                 <div class="card-body text-center p-4 position-relative">
                                     <div class="bg-light text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; color: var(--orange) !important;">
                                         <i class="fas fa-check-double fs-4"></i>
                                     </div>
-                                    <h5 class="fw-bold text-dark mb-2">Review Claims</h5>
+                                    <h6 class="fw-bold text-dark mb-2">Review Claims</h6>
                                     <p class="text-muted small mb-0">Process pending student claims</p>
                                     {% if pending_claims > 0 %}
                                     <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 shadow-sm">{{ pending_claims }} Pending</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <a href="{{ url_for('items.pending_reports') }}" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                                <div class="card-body text-center p-4 position-relative">
+                                    <div class="bg-light text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; color: var(--teal) !important;">
+                                        <i class="fas fa-clipboard-check fs-4"></i>
+                                    </div>
+                                    <h6 class="fw-bold text-dark mb-2">Review Reports</h6>
+                                    <p class="text-muted small mb-0">Verify items reported by students</p>
+                                    {% if pending_reports > 0 %}
+                                    <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 shadow-sm">{{ pending_reports }} Pending</span>
                                     {% endif %}
                                 </div>
                             </div>

@@ -11,6 +11,10 @@ class Item(db.Model):
     location = db.Column(db.String(200))
     status = db.Column(db.String(50), default="Found")
     item_type = db.Column(db.String(50), nullable=False)
+    
+    # New columns for student reporting
+    reported_by_id = db.Column(db.Integer, db.ForeignKey("person.id"), nullable=True)
+    reported_by = db.relationship("Person", foreign_keys=[reported_by_id], backref="reported_items")
 
     __mapper_args__ = {
         "polymorphic_on": item_type,
@@ -25,7 +29,8 @@ class Item(db.Model):
             "date_found": self.date_found,
             "location": self.location,
             "status": self.status,
-            "item_type": self.item_type
+            "item_type": self.item_type,
+            "reported_by": self.reported_by.name if self.reported_by else "Admin"
         }
 
     def update_status(self, new_status):

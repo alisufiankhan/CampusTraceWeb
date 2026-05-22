@@ -34,6 +34,16 @@ def create_app():
         from flask import redirect, url_for
         return redirect(url_for('auth.login'))
 
+    @app.context_processor
+    def inject_counts():
+        from app.models.item import Item
+        pending_reports_count = 0
+        try:
+            pending_reports_count = Item.query.filter_by(status="PendingVerification").count()
+        except:
+            pass
+        return dict(pending_reports_count=pending_reports_count)
+
     from app.routes.items import items
     app.register_blueprint(items)
     

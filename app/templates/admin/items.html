@@ -106,9 +106,22 @@
         </h5>
         <span class="badge bg-teal rounded-pill fs-6">{{ items|length }} Items</span>
     </div>
+    <div class="bg-light border-bottom px-4 py-2">
+        <ul class="nav nav-pills nav-sm" id="itemFilters">
+            <li class="nav-item">
+                <a class="nav-link active rounded-pill px-3 py-1" href="#" data-filter="all">All Items</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-muted rounded-pill px-3 py-1" href="#" data-filter="admin">Admin Registered</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-muted rounded-pill px-3 py-1" href="#" data-filter="student">Student Reported</a>
+            </li>
+        </ul>
+    </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0" id="itemsTable">
                 <thead>
                     <tr>
                         <th class="ps-4">Item ID</th>
@@ -116,13 +129,14 @@
                         <th>Location</th>
                         <th>Date</th>
                         <th>Type</th>
+                        <th>Reported By</th>
                         <th>Status</th>
                         <th class="text-end pe-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in items %}
-                    <tr>
+                    <tr class="item-row" data-source="{{ 'student' if item.reported_by else 'admin' }}">
                         <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ item.item_id }}</span></td>
                         <td class="fw-bold">{{ item.desc }}</td>
                         <td><i class="fas fa-map-marker-alt text-muted me-1"></i> {{ item.location }}</td>
@@ -136,6 +150,13 @@
                                 <span class="badge" style="background: #F3E8FF; color: #7C3AED;"><i class="fas fa-shopping-bag me-1"></i> Personal</span>
                             {% else %}
                                 <span class="badge bg-secondary">{{ item.item_type }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.reported_by %}
+                                <span><i class="fas fa-user-graduate text-teal me-1"></i> {{ item.reported_by.name }}</span>
+                            {% else %}
+                                <span class="text-muted"><i class="fas fa-user-shield me-1"></i> Admin</span>
                             {% endif %}
                         </td>
                         <td>
@@ -163,4 +184,35 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterLinks = document.querySelectorAll('#itemFilters .nav-link');
+    const rows = document.querySelectorAll('.item-row');
+
+    filterLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Update active state
+            filterLinks.forEach(l => {
+                l.classList.remove('active');
+                l.classList.add('text-muted');
+            });
+            this.classList.add('active');
+            this.classList.remove('text-muted');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            rows.forEach(row => {
+                if(filter === 'all' || row.getAttribute('data-source') === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

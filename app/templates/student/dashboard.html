@@ -1,59 +1,108 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="mb-4">
-    <h2>Welcome, {{ current_user.name }}</h2>
-</div>
-
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <strong>Roll Number:</strong> {{ current_user.roll_number }}
-                    </div>
-                    <div class="col-md-6">
-                        <strong>Department:</strong> {{ current_user.dept }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="page-header border-0 pb-0">
+    <h1 class="mb-1">
+        <i class="fas fa-user-graduate"></i>
+        Student Dashboard
+    </h1>
+    <p>Welcome back, <span class="fw-bold">{{ current_user.name }}</span> ({{ current_user.roll_number }})</p>
 </div>
 
 {% if current_user.is_flagged %}
-<div class="alert alert-danger" role="alert">
-    <strong>Warning!</strong> Your account has been flagged due to multiple rejected claims. Please contact admin.
+<div class="alert alert-danger mb-4 shadow-sm" role="alert">
+    <i class="fas fa-exclamation-triangle fs-4"></i>
+    <div>
+        <strong>Warning: Account Flagged</strong>
+        <div class="small">Your account has been flagged due to multiple rejected claims. Please contact administration.</div>
+    </div>
 </div>
 {% endif %}
 
 <div class="row g-4 mb-5">
     <div class="col-12 col-md-4">
-        <div class="card stat-card h-100 p-3 text-center">
-            <h5 class="text-muted">My Total Claims</h5>
-            <h3 class="text-teal mb-0">{{ claims_count }}</h3>
+        <div class="stat-card stat-teal">
+            <div class="stat-icon"><i class="fas fa-list-ul"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Total Claims</div>
+                <div class="stat-number">{{ claims_count|default(0) }}</div>
+            </div>
         </div>
     </div>
     <div class="col-12 col-md-4">
-        <div class="card stat-card h-100 p-3 text-center" style="border-top-color: #fd7e14;">
-            <h5 class="text-muted">Pending Claims</h5>
-            <h3 class="mb-0" style="color: #fd7e14;">0</h3>
+        <div class="stat-card stat-orange">
+            <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Pending Claims</div>
+                <div class="stat-number">0</div>
+            </div>
         </div>
     </div>
     <div class="col-12 col-md-4">
-        <div class="card stat-card h-100 p-3 text-center" style="border-top-color: #198754;">
-            <h5 class="text-muted">Approved Claims</h5>
-            <h3 class="text-success mb-0">0</h3>
+        <div class="stat-card stat-mint">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Approved Claims</div>
+                <div class="stat-number">0</div>
+            </div>
         </div>
     </div>
 </div>
 
-<div>
-    <h4>Quick Actions</h4>
-    <div class="d-flex gap-3 mt-3 flex-wrap">
-        <a href="#" class="btn btn-teal">Search for Items</a>
-        <a href="#" class="btn btn-teal">My Claims</a>
-        <a href="#" class="btn btn-teal">Submit a Claim</a>
+<div class="card border-0 shadow-sm bg-transparent">
+    <div class="card-header bg-transparent border-0 pt-0 pb-3 px-0">
+        <h5 class="fw-bold mb-0 text-dark">Quick Actions</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('items.search') }}" class="text-decoration-none">
+                    <div class="card h-100 border border-teal shadow-sm hover-elevate" style="background: var(--teal-pale);">
+                        <div class="card-body text-center p-4">
+                            <div class="bg-teal text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px;">
+                                <i class="fas fa-search fs-4"></i>
+                            </div>
+                            <h6 class="fw-bold text-teal mb-2">Search for Items</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('claims.student_my_claims') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-elevate">
+                        <div class="card-body text-center p-4">
+                            <div class="bg-light text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; color: var(--purple) !important;">
+                                <i class="fas fa-list-check fs-4"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-2">My Claims</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('items.search') }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-elevate">
+                        <div class="card-body text-center p-4">
+                            <div class="bg-light text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; color: var(--mint) !important;">
+                                <i class="fas fa-hand-holding fs-4"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-2">Submit a Claim</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('items.report_found') }}" class="text-decoration-none">
+                    <div class="card h-100 border border-orange shadow-sm hover-elevate" style="background: #FFFBEB;">
+                        <div class="card-body text-center p-4">
+                            <div class="bg-warning text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px;">
+                                <i class="fas fa-plus-circle fs-4"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-2">Report Found Item</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

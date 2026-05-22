@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header border-0 pb-0">
+    <h1 class="mb-1">
+        <i class="fas fa-clipboard-check"></i>
+        Pending Item Reports
+    </h1>
+    <p>Review items reported by students</p>
+    
+    <div class="mt-3">
+        <span class="badge bg-warning text-dark fs-6 rounded-pill px-3 py-2 shadow-sm border border-warning border-opacity-50">
+            {{ pending_items|length }} items waiting for verification
+        </span>
+    </div>
+</div>
+
+{% if pending_items|length == 0 %}
+<div class="empty-state card border-0 shadow-sm">
+    <i class="fas fa-check-circle text-teal" style="font-size: 5rem; opacity: 0.8;"></i>
+    <h5>All reports have been reviewed</h5>
+    <p>There are no pending items reported by students at the moment.</p>
+</div>
+{% else %}
+<div class="row g-4">
+    {% for item in pending_items %}
+    <div class="col-12">
+        <div class="card border-0 shadow-sm border-start border-4 border-warning">
+            <div class="card-header bg-white border-bottom pt-4 pb-3">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="font-monospace fw-bold text-muted">{{ item.item_id }}</span>
+                        <span class="badge bg-light border text-dark">{{ item.item_type|capitalize }}</span>
+                    </div>
+                    <div class="text-end">
+                        <div class="small fw-bold text-dark">Reported by: {{ item.reported_by.name if item.reported_by else 'Unknown' }}</div>
+                        <div class="small text-muted">{{ item.date_found }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- Left: Item details -->
+                    <div class="col-lg-7 border-end-lg">
+                        <h4 class="fw-bold mb-3 text-dark">{{ item.desc }}</h4>
+                        
+                        <div class="d-flex flex-wrap gap-4 mb-4">
+                            <div class="text-muted small">
+                                <i class="fas fa-map-marker-alt text-teal me-1"></i> {{ item.location }}
+                            </div>
+                            <div class="text-muted small">
+                                <i class="fas fa-calendar text-teal me-1"></i> {{ item.date_found }}
+                            </div>
+                        </div>
+                        
+                        <div class="bg-light p-3 rounded">
+                            <h6 class="fw-bold text-muted small text-uppercase mb-2">Item Specifications</h6>
+                            <div class="row g-2 small">
+                                {% if item.item_type == 'electronic' %}
+                                    <div class="col-sm-4"><strong>Brand:</strong> {{ item.brand|default('N/A') }}</div>
+                                    <div class="col-sm-4"><strong>Color:</strong> {{ item.color|default('N/A') }}</div>
+                                    <div class="col-sm-4"><strong>S/N:</strong> <span class="font-monospace">{{ item.serial_number|default('N/A') }}</span></div>
+                                {% elif item.item_type == 'document' %}
+                                    <div class="col-sm-6"><strong>Type:</strong> {{ item.doc_type|default('N/A') }}</div>
+                                    <div class="col-sm-6"><strong>Issuer:</strong> {{ item.issued_by|default('N/A') }}</div>
+                                {% elif item.item_type == 'personal' %}
+                                    <div class="col-sm-4"><strong>Color:</strong> {{ item.item_color|default('N/A') }}</div>
+                                    <div class="col-sm-4"><strong>Size:</strong> {{ item.size|default('N/A') }}</div>
+                                    <div class="col-sm-4"><strong>Material:</strong> {{ item.material|default('N/A') }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Reporter info -->
+                    <div class="col-lg-5">
+                        <h6 class="fw-bold text-muted small text-uppercase mb-3">Reporter Information</h6>
+                        
+                        {% if item.reported_by %}
+                        <div class="d-flex flex-column gap-2 mb-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="fas fa-user text-teal" style="width: 16px;"></i>
+                                <span class="fw-bold">{{ item.reported_by.name }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="fas fa-id-card text-teal" style="width: 16px;"></i>
+                                <span class="text-muted">{{ item.reported_by.roll_number }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="fas fa-envelope text-teal" style="width: 16px;"></i>
+                                <span class="text-muted">{{ item.reported_by.email }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info border-0 shadow-sm py-2 px-3 small d-flex gap-2">
+                            <i class="fas fa-info-circle mt-1 text-teal"></i>
+                            <span>Student confirms they have this item and will hand it to admin office.</span>
+                        </div>
+                        {% else %}
+                        <div class="text-muted fst-italic">Reporter information unavailable.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-footer bg-white border-top p-4 d-flex gap-3 justify-content-end">
+                <form action="{{ url_for('items.reject_report', item_id=item.item_id) }}" method="POST" onsubmit="return confirm('Reject this report? This cannot be undone.');">
+                    <button type="submit" class="btn btn-outline-danger btn-lg px-4 fw-bold">
+                        <i class="fas fa-times me-2"></i> Reject Report
+                    </button>
+                </form>
+                
+                <form action="{{ url_for('items.verify', item_id=item.item_id) }}" method="POST" onsubmit="return confirm('Verify this item? It will be visible to all students.');">
+                    <button type="submit" class="btn btn-teal btn-lg px-5 fw-bold">
+                        <i class="fas fa-check me-2"></i> Verify & Publish
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

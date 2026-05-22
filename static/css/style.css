@@ -237,6 +237,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 .badge-returned { background: #ECFDF5 !important; color: #065F46 !important; }
 .badge-disputed { background: #FEF3C7 !important; color: #B45309 !important; }
 .badge-expired { background: #F3F4F6 !important; color: #6B7280 !important; }
+.badge-pendingverification { background: #FEF3C7 !important; color: #B45309 !important; }
 
 /* ITEM CARDS */
 .item-card {

@@ -21,12 +21,14 @@ def dashboard():
     pending_claims = Claim.query.filter_by(status="Pending").count()
     flagged_students = Student.query.filter_by(is_flagged=True).count()
     total_students = Student.query.count()
+    pending_reports = Item.query.filter_by(status="PendingVerification").count()
     
     return render_template('admin/dashboard.html', 
                            total_items=total_items,
                            pending_claims=pending_claims,
                            flagged_students=flagged_students,
-                           total_students=total_students)
+                           total_students=total_students,
+                           pending_reports=pending_reports)
 
 @admin_routes.route('/reports')
 def reports():

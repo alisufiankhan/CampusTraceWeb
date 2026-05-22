@@ -42,12 +42,21 @@
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.dashboard') }}"><i class="fas fa-gauge"></i> Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('items.all_items') }}"><i class="fas fa-box-open"></i> Items</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('claims.admin_claims') }}"><i class="fas fa-file-alt"></i> Claims</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('items.pending_reports') }}">
+                                    <i class="fas fa-clipboard-check"></i> Pending Reports
+                                    {% if pending_reports_count > 0 %}
+                                    <span class="badge bg-warning text-dark ms-1 rounded-pill">{{ pending_reports_count }}</span>
+                                    {% endif %}
+                                </a>
+                            </li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.reports') }}"><i class="fas fa-chart-bar"></i> Reports</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.flagged') }}"><i class="fas fa-flag"></i> Flagged Students</a></li>
                         {% elif current_user.role == 'student' %}
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('student_routes.dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('items.search') }}"><i class="fas fa-search"></i> Search Items</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('claims.student_my_claims') }}"><i class="fas fa-list-check"></i> My Claims</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('items.report_found') }}"><i class="fas fa-plus-circle"></i> Report Found Item</a></li>
                         {% endif %}
                         <li class="nav-item ms-lg-3"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                         <li class="nav-item ms-lg-3 d-none d-lg-flex align-items-center gap-2">
