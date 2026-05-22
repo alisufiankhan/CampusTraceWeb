@@ -16,12 +16,19 @@ def submit():
         flash("Student access required", "error")
         return redirect(url_for('auth.login'))
         
-    item_id = request.form.get("item_id")
+    item_id_val = request.form.get("item_id")
     proof = request.form.get("proof")
     
-    item = Item.query.get(item_id)
+    if not item_id_val:
+        flash("System error: Item ID missing. Please refresh the page (Ctrl+F5) and try again.", "error")
+        return redirect(url_for('items.search'))
+        
+    item = Item.query.get(item_id_val)
     if not item:
-        flash("Item not found", "error")
+        item = Item.query.filter_by(item_id=item_id_val).first()
+        
+    if not item:
+        flash("Item not found. Please try again.", "error")
         return redirect(url_for('items.search'))
         
     if item.status != "Found":
