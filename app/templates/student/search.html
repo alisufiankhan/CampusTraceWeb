@@ -101,7 +101,7 @@
                 
                 <div class="mt-auto">
                     {% if current_user.role == 'student' and item.status == 'Found' %}
-                        <button class="btn btn-teal w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#claimModal" data-item-id="{{ item.id }}" data-item-desc="{{ item.desc }}" data-item-type="{{ item.item_type }}">Claim This Item</button>
+                        <button class="btn btn-teal w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#claimModal{{ item.id }}">Claim This Item</button>
                     {% else %}
                         <button class="btn btn-light w-100 fw-bold border text-muted" disabled>{{ item.status }}</button>
                     {% endif %}
@@ -109,47 +109,46 @@
             </div>
         </div>
     </div>
+    
+    <!-- Claim Modal for Item {{ item.id }} -->
+    <div class="modal fade" id="claimModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius);">
+          <div class="modal-header bg-teal text-white border-0" style="padding: 1.5rem;">
+            <h5 class="modal-title fw-bold"><i class="fas fa-hand-paper me-2"></i> Submit a Claim</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="{{ url_for('claims.submit') }}" method="POST">
+              <div class="modal-body p-4">
+                <div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded border">
+                    <div class="bg-teal text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: 20px;">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-bold text-uppercase">Claiming Item</div>
+                        <div class="fw-bold text-dark fs-5">{{ item.desc }}</div>
+                    </div>
+                </div>
+                
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                
+                <div class="mb-3">
+                    <label for="proof{{ item.id }}" class="form-label d-flex justify-content-between">
+                        <span>Describe your proof of ownership</span>
+                    </label>
+                    <textarea class="form-control" id="proof{{ item.id }}" name="proof" rows="5" placeholder="Provide details like exact contents, serial numbers, passcodes, specific marks, or attach a link to a photo/receipt..." required maxlength="1000"></textarea>
+                </div>
+              </div>
+              <div class="modal-footer bg-light border-0 p-3" style="border-radius: 0 0 var(--radius) var(--radius);">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-teal px-4 fw-bold"><i class="fas fa-paper-plane me-2"></i> Submit Claim</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
     {% endfor %}
 </div>
 {% endif %}
 {% endif %}
-
-<!-- Claim Modal -->
-<div class="modal fade" id="claimModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius);">
-      <div class="modal-header bg-teal text-white border-0" style="padding: 1.5rem;">
-        <h5 class="modal-title fw-bold"><i class="fas fa-hand-paper me-2"></i> Submit a Claim</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="{{ url_for('claims.submit') }}" method="POST">
-          <div class="modal-body p-4">
-            <div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded border">
-                <div class="bg-teal text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: 20px;">
-                    <i class="fas fa-box"></i>
-                </div>
-                <div>
-                    <div class="text-muted small fw-bold text-uppercase">Claiming Item</div>
-                    <div class="fw-bold text-dark fs-5" id="modalItemDesc">Item Description</div>
-                </div>
-            </div>
-            
-            <input type="hidden" id="modalItemId" name="item_id">
-            
-            <div class="mb-3">
-                <label for="proof" class="form-label d-flex justify-content-between">
-                    <span>Describe your proof of ownership</span>
-                    <span class="text-muted fw-normal"><span id="charCount">0</span>/1000</span>
-                </label>
-                <textarea class="form-control" id="proof" name="proof" rows="5" placeholder="Provide details like exact contents, serial numbers, passcodes, specific marks, or attach a link to a photo/receipt..." required maxlength="1000"></textarea>
-            </div>
-          </div>
-          <div class="modal-footer bg-light border-0 p-3" style="border-radius: 0 0 var(--radius) var(--radius);">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-teal px-4 fw-bold"><i class="fas fa-paper-plane me-2"></i> Submit Claim</button>
-          </div>
-      </form>
-    </div>
-  </div>
-</div>
 {% endblock %}
