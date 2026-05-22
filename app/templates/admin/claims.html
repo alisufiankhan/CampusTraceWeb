@@ -35,8 +35,8 @@
                     <tr class="border-start border-4 border-warning">
                         <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
                         <td>
-                            <div class="fw-bold">{{ claim.student.name }}</div>
-                            <div class="small text-muted">{{ claim.student.student_id }}</div>
+                            <div class="fw-bold">{{ claim.person.name }}</div>
+                            <div class="small text-muted">{{ claim.person.user_id }}</div>
                         </td>
                         <td>
                             <div class="fw-bold">{{ claim.item.desc }}</div>
@@ -135,7 +135,7 @@
                             {% for claim in claims %}
                             <tr class="{% if claim.status == 'Approved' %}border-start border-4 border-success{% elif claim.status == 'Rejected' %}border-start border-4 border-danger{% elif claim.status == 'Disputed' %}border-start border-4 border-warning{% endif %}">
                                 <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
-                                <td>{{ claim.student.name }}</td>
+                                <td>{{ claim.person.name }}</td>
                                 <td>{{ claim.item.desc }}</td>
                                 <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
                                 <td class="text-end pe-4">
@@ -177,7 +177,7 @@
                             {% set count = count + 1 %}
                             <tr class="border-start border-4 {% if status == 'Approved' %}border-success{% elif status == 'Rejected' %}border-danger{% elif status == 'Disputed' %}border-warning{% endif %}">
                                 <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ claim.claim_id }}</span></td>
-                                <td>{{ claim.student.name }}</td>
+                                <td>{{ claim.person.name }}</td>
                                 <td>{{ claim.item.desc }}</td>
                                 <td><span class="badge badge-{{ claim.status|lower }}">{{ claim.status }}</span></td>
                                 <td class="text-end pe-4">
