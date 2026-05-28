@@ -245,6 +245,6 @@ def reject_report(item_id):
         flash("Item not found", "error")
         return redirect(url_for('items.pending_reports'))
         
-    item.update_status("Expired")
+    item.update_status("Rejected")
     flash(f"Item report {item_id} rejected", "warning")
     return redirect(url_for('items.pending_reports'))

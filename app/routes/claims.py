@@ -16,6 +16,10 @@ def submit():
         flash("Student access required", "error")
         return redirect(url_for('auth.login'))
         
+    if getattr(current_user, 'is_flagged', False):
+        flash("Your account is flagged due to multiple rejected claims. You cannot submit new claims.", "error")
+        return redirect(url_for('items.search'))
+        
     item_id_val = request.form.get("item_id")
     proof = request.form.get("proof")
     
@@ -151,6 +155,10 @@ def handover(claim_id):
         
     if claim.status != "Approved":
         flash("Claim must be approved first", "error")
+        return redirect(url_for('claims.admin_claims'))
+        
+    if claim.item.status == "Returned":
+        flash("Handover has already been processed for this item", "error")
         return redirect(url_for('claims.admin_claims'))
         
     if request.method == 'POST':

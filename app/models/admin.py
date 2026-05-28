@@ -13,12 +13,26 @@ class Admin(Person):
     def approve_claim(self, claim):
         claim.status = "Approved"
         claim.item.update_status("Claimed")
+        
+        # Automatically reject other pending claims for this item
+        from app.models.claim import Claim
+        other_claims = Claim.query.filter(Claim.item_id == claim.item_id, Claim.id != claim.id, Claim.status == "Pending").all()
+        for other in other_claims:
+            other.status = "Rejected"
+            
         db.session.commit()
         return "Claim approved successfully"
 
     def reject_claim(self, claim, student):
         claim.status = "Rejected"
         student.increment_rejections()
+        
+        # Check if there are other pending claims for this item
+        from app.models.claim import Claim
+        other_pending = Claim.query.filter(Claim.item_id == claim.item_id, Claim.id != claim.id, Claim.status == "Pending").count()
+        if other_pending == 0:
+            claim.item.update_status("Found")
+            
         db.session.commit()
         return "Claim rejected"
 
