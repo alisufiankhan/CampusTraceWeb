@@ -1,133 +1,347 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Hero Section with Custom PAF-IAST Branding -->
-<div class="paf-hero-section text-center text-lg-start mb-5">
-    <div class="row align-items-center g-5">
+<!-- HERO SECTION -->
+<section class="bg-grid-pattern py-5 px-3 mb-5 text-center text-lg-start border border-light rounded-[14px] bg-light position-relative overflow-hidden" style="border-radius: var(--radius-lg);">
+    <div class="row align-items-center g-5 py-4 px-lg-4 position-relative" style="z-index: 1;">
         <div class="col-lg-7">
             <span class="paf-badge">
-                <i class="fas fa-university"></i> Pak-Austria Fachhochschule
+                <i class="fas fa-certificate text-warning"></i> Official Lost & Found — PAF-IAST
             </span>
-            <h1 class="display-3 fw-extrabold text-white mb-3" style="letter-spacing: -2px; line-height: 1.1;">
-                CampusTrace
+            <h1 class="display-4 fw-black text-dark mb-3" style="letter-spacing: -2px; font-weight: 900; line-height: 1.1;">
+                Lost something on campus?<br>We'll help you <span class="text-teal">trace it back.</span>
             </h1>
-            <h3 class="h4 text-white-50 mb-4 fw-light">
-                Official Lost & Found Management System of <span class="text-white fw-semibold">PAF-IAST</span>
-            </h3>
-            <p class="lead text-white-50 mb-5" style="max-width: 600px;">
-                A smart, secure, and transparent portal designed to bridge the gap between lost valuables and their rightful owners inside the PAF-IAST campus community.
+            <p class="lead text-muted mb-4" style="max-width: 620px;">
+                CampusTrace is the official lost and found platform for Pak-Austria Fachhochschule (PAF-IAST). Streamlining the stressful process of losing personal items within the university ecosystem.
             </p>
             
-            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
-                <a href="{{ url_for('auth.login') }}" class="btn cta-button-gold btn-lg fw-bold d-inline-flex align-items-center justify-content-center gap-2">
-                    <i class="fas fa-sign-in-alt"></i> Enter Campus Portal
+            <div class="d-flex flex-column flex-sm-row gap-3 mb-5 justify-content-center justify-content-lg-start">
+                <a href="{{ url_for('items.search') }}" class="btn btn-teal btn-lg fw-bold d-inline-flex align-items-center justify-content-center gap-2 px-4 rounded-pill shadow">
+                    <i class="fas fa-search"></i> Search Lost Items
                 </a>
-                <a href="#how-it-works" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold d-inline-flex align-items-center justify-content-center gap-2">
-                    Learn More <i class="fas fa-arrow-down"></i>
+                <a href="{{ url_for('items.report_found') }}" class="btn btn-outline-teal btn-lg fw-bold d-inline-flex align-items-center justify-content-center gap-2 px-4 rounded-pill">
+                    <i class="fas fa-plus"></i> Report Found Item
                 </a>
             </div>
         </div>
         
-        <!-- Live Glassmorphic Statistics -->
+        <!-- Interactive Database Live Stats Card -->
         <div class="col-lg-5">
-            <div class="row g-3">
-                <div class="col-6">
-                    <div class="glass-stat-card text-center h-100">
-                        <div class="fs-4 mb-2 text-warning"><i class="fas fa-search"></i></div>
-                        <div class="fs-1 fw-extrabold lh-1 mb-2">{{ total_found }}</div>
-                        <div class="small opacity-75 text-uppercase fw-bold letter-spacing-1">Active Items</div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="glass-stat-card text-center h-100">
-                        <div class="fs-4 mb-2 text-info"><i class="fas fa-handshake"></i></div>
-                        <div class="fs-1 fw-extrabold lh-1 mb-2">{{ total_returned }}</div>
-                        <div class="small opacity-75 text-uppercase fw-bold letter-spacing-1">Returned Safe</div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="glass-stat-card d-flex align-items-center justify-content-between p-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="fs-2 text-danger"><i class="fas fa-clipboard-list"></i></div>
-                            <div class="text-start">
-                                <h5 class="fw-bold mb-0 text-white">{{ total_pending_claims }} Pending</h5>
-                                <div class="small opacity-75">Claims under active review</div>
-                            </div>
+            <div class="card border-0 card-shadow p-4 bg-white" style="border-radius: var(--radius);">
+                <h5 class="fw-bold text-dark mb-4 text-center text-lg-start border-bottom pb-2">
+                    <i class="fas fa-chart-line text-teal me-2"></i> Live Campus Metrics
+                </h5>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="bg-light p-3 rounded text-center border h-100">
+                            <div class="text-teal mb-1"><i class="fas fa-box-open fs-4"></i></div>
+                            <div class="fs-2 fw-black text-dark" style="font-weight: 800;">{{ total_found }}</div>
+                            <div class="text-uppercase fw-bold text-muted small mt-1" style="font-size: 10px; letter-spacing: 0.5px;">Active Items</div>
                         </div>
-                        <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-bold">Live Status</span>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light p-3 rounded text-center border h-100">
+                            <div class="text-success mb-1"><i class="fas fa-check-double fs-4"></i></div>
+                            <div class="fs-2 fw-black text-dark" style="font-weight: 800;">{{ total_returned }}</div>
+                            <div class="text-uppercase fw-bold text-muted small mt-1" style="font-size: 10px; letter-spacing: 0.5px;">Items Returned</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="bg-light p-3 rounded border d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="text-warning"><i class="fas fa-clipboard-list fs-3"></i></div>
+                                <div class="text-start">
+                                    <div class="fw-bold text-dark lh-1">{{ total_pending_claims }} Pending</div>
+                                    <span class="text-muted small">Claims under active review</span>
+                                </div>
+                            </div>
+                            <span class="badge bg-teal rounded-pill px-3 py-2 fw-bold" style="font-size: 11px;">Live Status</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Workflow and How It Works Section -->
-<div id="how-it-works" class="py-5 mb-5">
+<!-- SECTION 2: THE PROBLEM (WHATSAPP CHAOS) -->
+<section class="py-5 mb-5 px-3">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <h2 class="fw-black text-dark mb-3" style="font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; line-height: 1.1;">
+                WhatsApp groups are <span class="text-accent-red">chaos.</span>
+            </h2>
+            <p class="lead text-muted mb-4">
+                Scrolling through hundreds of messages, hoping someone found your keys. No organization, no verification, and constant spam.
+            </p>
+            <div class="bg-white rounded-[14px] p-4 border-accent-red border-start border-4 card-shadow position-relative mb-4">
+                <i class="fa-solid fa-quote-left text-accent-red opacity-10 text-4xl position-absolute top-0 start-0 m-3"></i>
+                <p class="italic text-muted relative z-10 ps-4 mb-3">
+                    "I lost my student ID and posted in 5 different WhatsApp groups. My message got buried under class schedules in 10 minutes. I never got it back."
+                </p>
+                <div class="ps-4 fw-bold text-dark">— Sarah T., Engineering Dept</div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="row g-4">
+                <div class="col-sm-6">
+                    <div class="card h-100 border p-4 bg-white" style="border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-eye-slash text-accent-red fs-3 mb-3"></i>
+                        <h5 class="fw-bold text-dark mb-2">No Tracking</h5>
+                        <p class="text-muted small mb-0">Items get lost in the feed with no way to search effectively.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card h-100 border p-4 bg-white" style="border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-users-slash text-accent-red fs-3 mb-3"></i>
+                        <h5 class="fw-bold text-dark mb-2">Zero Coordination</h5>
+                        <p class="text-muted small mb-0">Multiple people claiming the same item with no verified process.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card h-100 border p-4 bg-white" style="border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-file-circle-xmark text-accent-red fs-3 mb-3"></i>
+                        <h5 class="fw-bold text-dark mb-2">No Proof Required</h5>
+                        <p class="text-muted small mb-0">Handing over valuable items to strangers without any documentation.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card h-100 border p-4 bg-white" style="border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-ghost text-accent-red fs-3 mb-3"></i>
+                        <h5 class="fw-bold text-dark mb-2">Things Disappear</h5>
+                        <p class="text-muted small mb-0">Without a central hub, many found items are simply abandoned.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 3: HOW IT WORKS -->
+<section class="bg-how-bg py-5 px-3 rounded-[14px] mb-5" style="border-radius: var(--radius-lg);">
     <div class="text-center mb-5">
-        <h2 class="fw-extrabold text-dark" style="font-size: 2.25rem; letter-spacing: -1px;">Integrated Campus Integrity Workflow</h2>
-        <p class="text-muted lead mx-auto" style="max-width: 600px;">Providing a secure loop from reporting an item to verification and safe return.</p>
+        <h2 class="fw-black text-dark mb-2" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -1px;">How it Works</h2>
+        <p class="text-muted lead">Get your belongings back in three simple, secure steps.</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center align-items-start px-lg-4 text-center">
+        <!-- Step 1 -->
+        <div class="col-md-3">
+            <div class="card border-0 card-shadow mx-auto bg-white mb-4 d-flex align-items-center justify-content-center" style="width: 88px; height: 88px; border-radius: 50%;">
+                <i class="fa-solid fa-bullhorn text-teal fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">1. Report</h4>
+            <p class="text-muted small px-3">Log in and post details about the item you lost or found on campus.</p>
+        </div>
+        
+        <!-- Arrow 1 -->
+        <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center text-teal opacity-25 mt-5">
+            <i class="fa-solid fa-arrow-right fs-3"></i>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="col-md-3">
+            <div class="card border-0 card-shadow mx-auto bg-white mb-4 d-flex align-items-center justify-content-center" style="width: 88px; height: 88px; border-radius: 50%;">
+                <i class="fa-solid fa-magnifying-glass text-teal fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">2. Find</h4>
+            <p class="text-muted small px-3">Search our campus database or wait for a verified match notification.</p>
+        </div>
+        
+        <!-- Arrow 2 -->
+        <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center text-teal opacity-25 mt-5">
+            <i class="fa-solid fa-arrow-right fs-3"></i>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="col-md-3">
+            <div class="card border-0 card-shadow mx-auto bg-white mb-4 d-flex align-items-center justify-content-center" style="width: 88px; height: 88px; border-radius: 50%;">
+                <i class="fa-solid fa-handshake text-teal fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">3. Get Back</h4>
+            <p class="text-muted small px-3">Coordinate a verified, safe handover at the admin office securely.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4: FEATURES -->
+<section class="py-5 mb-5 px-3">
+    <div class="text-center mb-5">
+        <h2 class="fw-black text-dark mb-2" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -1px;">Built for Peace of Mind</h2>
+        <p class="text-muted lead">Everything you need to safely and securely manage lost and found items on campus.</p>
     </div>
     
     <div class="row g-4">
         <!-- Feature 1 -->
         <div class="col-md-6 col-lg-4">
             <div class="paf-feature-card shadow-sm">
-                <div class="paf-feature-icon">
-                    <i class="fas fa-plus-circle"></i>
-                </div>
-                <h5 class="fw-bold text-dark mb-3">1. Report Found Valuables</h5>
-                <p class="text-muted small mb-0">
-                    Did you discover a lost phone, wallet, or ID card around the PAF-IAST library, cafeteria, or labs? Instantly log details into our student reports queue for admin review.
-                </p>
+                <div class="paf-feature-icon"><i class="fa-solid fa-file-contract"></i></div>
+                <h5 class="fw-bold text-dark mb-3">Formal Claims</h5>
+                <p class="text-muted small mb-0">Submit official claim requests with supporting descriptions before contacting finders.</p>
             </div>
         </div>
         
         <!-- Feature 2 -->
         <div class="col-md-6 col-lg-4">
             <div class="paf-feature-card shadow-sm">
-                <div class="paf-feature-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h5 class="fw-bold text-dark mb-3">2. Admin Verification</h5>
-                <p class="text-muted small mb-0">
-                    Our university administrators verify incoming student reports against physical custody. Once verified, the items become searchable on the main student portal.
-                </p>
+                <div class="paf-feature-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <h5 class="fw-bold text-dark mb-3">Verified Listings</h5>
+                <p class="text-muted small mb-0">All items must be posted by verified PAFI-IAST student or staff accounts.</p>
             </div>
         </div>
         
         <!-- Feature 3 -->
         <div class="col-md-6 col-lg-4">
             <div class="paf-feature-card shadow-sm">
-                <div class="paf-feature-icon">
-                    <i class="fas fa-key"></i>
-                </div>
-                <h5 class="fw-bold text-dark mb-3">3. Claim & Handover</h5>
-                <p class="text-muted small mb-0">
-                    Search and claim your lost item. Provide detailed proof of ownership (e.g. locks patterns, serial keys, physical marks). Administrators review and process physically witnessed handovers.
-                </p>
+                <div class="paf-feature-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                <h5 class="fw-bold text-dark mb-3">Dispute Resolution</h5>
+                <p class="text-muted small mb-0">Admin mediation for conflicting claims on high-value items like electronics.</p>
+            </div>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="paf-feature-card shadow-sm">
+                <div class="paf-feature-icon"><i class="fa-solid fa-hourglass-end"></i></div>
+                <h5 class="fw-bold text-dark mb-3">Auto Expiry</h5>
+                <p class="text-muted small mb-0">Unclaimed items are automatically archived after 30 days to keep the feed clean.</p>
+            </div>
+        </div>
+        
+        <!-- Feature 5 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="paf-feature-card shadow-sm">
+                <div class="paf-feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+                <h5 class="fw-bold text-dark mb-3">Accountability</h5>
+                <p class="text-muted small mb-0">Track exactly who reported, claimed, and authorized the return of every item.</p>
+            </div>
+        </div>
+        
+        <!-- Feature 6 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="paf-feature-card shadow-sm">
+                <div class="paf-feature-icon"><i class="fa-solid fa-signature"></i></div>
+                <h5 class="fw-bold text-dark mb-3">Handover Proof</h5>
+                <p class="text-muted small mb-0">Digital signatures required upon item collection for an unbreakable audit trail.</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- PAF-IAST Community Values Section -->
-<div class="card border-0 shadow-sm overflow-hidden mb-5" style="border-radius: var(--radius); background: linear-gradient(135deg, var(--teal-pale), white);">
-    <div class="card-body p-5">
-        <div class="row align-items-center g-4">
-            <div class="col-md-3 text-center">
-                <div class="bg-teal text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow" style="width: 96px; height: 96px; font-size: 40px;">
-                    <i class="fas fa-hand-holding-heart"></i>
-                </div>
+<!-- SECTION 5: WHO IS IT FOR -->
+<section class="py-5 mb-5 px-3 rounded-[14px] bg-light border border-light" style="border-radius: var(--radius-lg);">
+    <div class="text-center mb-5">
+        <h2 class="fw-black text-dark" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -1px;">Designed for the Whole Campus</h2>
+    </div>
+    
+    <div class="row g-4 px-lg-4">
+        <!-- Students -->
+        <div class="col-lg-6">
+            <div class="card h-100 bg-white border-top border-4 border-teal card-shadow p-5" style="border-radius: var(--radius);">
+                <i class="fa-solid fa-user-graduate text-teal mb-4 fs-1"></i>
+                <h3 class="fw-black text-dark mb-4" style="font-weight: 800;">For Students</h3>
+                <ul class="list-unstyled space-y-3">
+                    <li class="d-flex align-items-start gap-2 mb-2"><i class="fa-solid fa-check text-teal mt-1"></i> <span class="text-muted">Quickly search for your lost items across campus.</span></li>
+                    <li class="d-flex align-items-start gap-2 mb-2"><i class="fa-solid fa-check text-teal mt-1"></i> <span class="text-muted">Get notified instantly if someone finds something matching your description.</span></li>
+                    <li class="d-flex align-items-start gap-2 mb-2"><i class="fa-solid fa-check text-teal mt-1"></i> <span class="text-muted">Safe handover process—no meeting strangers in random places.</span></li>
+                    <li class="d-flex align-items-start gap-2"><i class="fa-solid fa-check text-teal mt-1"></i> <span class="text-muted">Do the right thing easily when you find someone's belongings.</span></li>
+                </ul>
             </div>
-            <div class="col-md-9 text-center text-md-start">
-                <h4 class="fw-bold text-teal-dark mb-2">Our Campus Integrity Standard</h4>
-                <p class="text-muted mb-0">
-                    Honesty and integrity are core pillars of Pak-Austria Fachhochschule. CampusTrace ensures all students behave responsibly. Multiple false or speculative claims trigger automatic flagging restrictions (3 rejections block claim submissions), keeping the portal reliable and trusted.
-                </p>
+        </div>
+        
+        <!-- Admin -->
+        <div class="col-lg-6">
+            <div class="card h-100 bg-white border-top border-4 border-accent-purple card-shadow p-5" style="border-radius: var(--radius);">
+                <i class="fa-solid fa-user-tie text-accent-purple mb-4 fs-1"></i>
+                <h3 class="fw-black text-dark mb-4" style="font-weight: 800;">For Admin & Staff</h3>
+                <ul class="list-unstyled space-y-3">
+                    <li class="d-flex align-items-start gap-2 mb-2"><i class="fa-solid fa-check text-accent-purple mt-1"></i> <span class="text-muted">Centralized dashboard to manage all lost property.</span></li>
+                    <li class="d-flex align-items-start gap-2 mb-2"><i class="fa-solid fa-check text-accent-purple mt-1"></i> <span class="text-muted">Reduce front desk clutter and disorganized item storage.</span></li>
+                    <li class="d-flex align-items-start gap-2 mb-2"><i class="fa-solid fa-check text-accent-purple mt-1"></i> <span class="text-muted">Maintain digital logs and signatures for compliance and liability.</span></li>
+                    <li class="d-flex align-items-start gap-2"><i class="fa-solid fa-check text-accent-purple mt-1"></i> <span class="text-muted">Automated reports on campus lost-and-found statistics.</span></li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- SECTION 6: TESTIMONIALS -->
+<section class="py-5 mb-5 px-3">
+    <div class="text-center mb-5">
+        <h2 class="fw-black text-dark" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -1px;">Trusted by the Community</h2>
+    </div>
+    
+    <div class="row g-4">
+        <!-- Testimonial 1 -->
+        <div class="col-md-4">
+            <div class="card border h-100 p-4 bg-white card-shadow" style="border-radius: var(--radius-sm);">
+                <div class="text-warning mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="italic text-muted mb-4">"I left my laptop charger in the library. Within two hours, I saw it posted on CampusTrace and got it back the same day. Lifesaver!"</p>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="w-10 h-10 bg-teal text-white rounded-circle d-flex align-items-center justify-content-center font-bold" style="width: 40px; height: 40px;">M</div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Mark D.</h6>
+                        <span class="small text-muted">Computer Science</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Testimonial 2 -->
+        <div class="col-md-4">
+            <div class="card border h-100 p-4 bg-white card-shadow" style="border-radius: var(--radius-sm);">
+                <div class="text-warning mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="italic text-muted mb-4">"As an admin, managing the physical lost and found box used to be a nightmare. Now we have a clear, traceable system for every item."</p>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="w-10 h-10 bg-accent-purple text-white rounded-circle d-flex align-items-center justify-content-center font-bold" style="width: 40px; height: 40px;">R</div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Rachel S.</h6>
+                        <span class="small text-muted">Student Affairs Admin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Testimonial 3 -->
+        <div class="col-md-4">
+            <div class="card border h-100 p-4 bg-white card-shadow" style="border-radius: var(--radius-sm);">
+                <div class="text-warning mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="italic text-muted mb-4">"I found a wallet and dropped it at the office, logging it on the app. The owner found me later to say thanks. Such a great tool."</p>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="w-10 h-10 bg-teal text-white rounded-circle d-flex align-items-center justify-content-center font-bold" style="width: 40px; height: 40px;">J</div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">James L.</h6>
+                        <span class="small text-muted">Business Admin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 7: CTA -->
+<section class="mb-4">
+    <div class="bg-teal text-white py-5 px-4 text-center rounded-[14px]" style="background: linear-gradient(135deg, var(--teal-dark), var(--teal)); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+        <div class="max-w-3xl mx-auto py-3">
+            <h2 class="fw-black text-white mb-3" style="font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px;">Ready to find what you've lost?</h2>
+            <p class="text-white-50 mb-4 fs-5" style="max-width: 600px; margin: 0 auto 2rem auto;">Join thousands of students keeping the campus organized, verified, and accountable.</p>
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
+                <a href="{{ url_for('auth.login') }}" class="btn cta-button-gold btn-lg fw-bold px-5">
+                    Sign In to CampusTrace
+                </a>
+                <a href="#how-it-works" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">
+                    See How It Works
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

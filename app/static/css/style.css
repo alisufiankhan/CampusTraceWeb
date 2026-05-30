@@ -406,3 +406,25 @@ footer strong { color: white; }
   transition: var(--transition);
 }
 
+.bg-grid-pattern {
+  background-size: 24px 24px;
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+}
+
+.card-shadow {
+  box-shadow: 0 10px 30px -5px rgba(2, 128, 144, 0.1);
+}
+
+.text-accent-red {
+  color: var(--red) !important;
+}
+
+.border-accent-red {
+  border-color: var(--red) !important;
+}
+
+.bg-how-bg {
+  background-color: var(--teal-pale) !important;
+}
+
+
