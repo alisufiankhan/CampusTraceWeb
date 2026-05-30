@@ -1,4 +1,6 @@
 import os
+os.environ['TEST_DATABASE_URL'] = 'sqlite:///:memory:'
+
 import sys
 import unittest
 from flask import current_app
@@ -13,7 +15,6 @@ from app.models.person import Person
 app = create_app()
 app.config['TESTING'] = True
 app.config['WTF_CSRF_ENABLED'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 
 class AppTestCase(unittest.TestCase):
     @classmethod
