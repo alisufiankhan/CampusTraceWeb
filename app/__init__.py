@@ -31,6 +31,7 @@ def create_app():
 
     @app.route('/')
     def index():
+        from flask import render_template
         from app.models.item import Item
         from app.models.claim import Claim
         
