@@ -72,7 +72,7 @@ label, .form-label { font-weight: 600; font-size: 13px; text-transform: uppercas
   font-size: 16px;
 }
 .navbar-brand i { display: none; } /* hide original icon if added in HTML to avoid duplication */
-.nav-link {
+.navbar .nav-link {
   color: rgba(255,255,255,0.8) !important;
   font-weight: 500;
   font-size: 14px;
@@ -81,9 +81,9 @@ label, .form-label { font-weight: 600; font-size: 13px; text-transform: uppercas
   transition: var(--transition);
   display: flex; align-items: center; gap: 6px;
 }
-.nav-link:hover { color: white !important; background: rgba(255,255,255,0.1); }
-.nav-link.active { color: white !important; background: rgba(255,255,255,0.15); }
-.nav-link i { font-size: 13px; opacity: 0.8; }
+.navbar .nav-link:hover { color: white !important; background: rgba(255,255,255,0.1); }
+.navbar .nav-link.active { color: white !important; background: rgba(255,255,255,0.15); }
+.navbar .nav-link i { font-size: 13px; opacity: 0.8; }
 
 .user-avatar {
   width: 34px; height: 34px;
