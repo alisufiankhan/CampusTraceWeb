@@ -305,3 +305,104 @@ footer strong { color: white; }
 .timeline-card.approved { border-left-color: var(--success); }
 .timeline-card.rejected { border-left-color: var(--red); }
 .timeline-card.disputed { border-left-color: var(--orange); }
+
+/* PAF-IAST Landing Page Styles */
+.paf-hero-section {
+  background: linear-gradient(135deg, #002D1E, #014F35, #00805A);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin-top: 1rem;
+}
+.paf-hero-section::before {
+  content: "\f19c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  font-size: 24rem;
+  color: rgba(255,255,255,0.02);
+  right: -3rem;
+  bottom: -5rem;
+  pointer-events: none;
+}
+.paf-badge {
+  background: rgba(255, 193, 7, 0.15);
+  color: #FFC107 !important;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.glass-stat-card {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  color: white;
+  transition: var(--transition);
+}
+.glass-stat-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 193, 7, 0.4);
+  transform: translateY(-5px);
+}
+.cta-button-gold {
+  background: #FFC107;
+  color: #002D1E !important;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 0.9rem 2.25rem;
+  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+  transition: var(--transition);
+  border: none;
+}
+.cta-button-gold:hover {
+  background: #E0A800;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.6);
+}
+.paf-feature-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: white;
+  padding: 2.25rem 1.75rem;
+  transition: var(--transition);
+  height: 100%;
+}
+.paf-feature-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  border-color: #00805A;
+}
+.paf-feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  background: var(--teal-pale);
+  color: #00805A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 1.5rem;
+}
+.paf-feature-card:hover .paf-feature-icon {
+  background: #00805A;
+  color: white;
+  transform: scale(1.05);
+  transition: var(--transition);
+}
+

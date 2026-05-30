@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hero Section with Custom PAF-IAST Branding -->
+<div class="paf-hero-section text-center text-lg-start mb-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+            <span class="paf-badge">
+                <i class="fas fa-university"></i> Pak-Austria Fachhochschule
+            </span>
+            <h1 class="display-3 fw-extrabold text-white mb-3" style="letter-spacing: -2px; line-height: 1.1;">
+                CampusTrace
+            </h1>
+            <h3 class="h4 text-white-50 mb-4 fw-light">
+                Official Lost & Found Management System of <span class="text-white fw-semibold">PAF-IAST</span>
+            </h3>
+            <p class="lead text-white-50 mb-5" style="max-width: 600px;">
+                A smart, secure, and transparent portal designed to bridge the gap between lost valuables and their rightful owners inside the PAF-IAST campus community.
+            </p>
+            
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                <a href="{{ url_for('auth.login') }}" class="btn cta-button-gold btn-lg fw-bold d-inline-flex align-items-center justify-content-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i> Enter Campus Portal
+                </a>
+                <a href="#how-it-works" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold d-inline-flex align-items-center justify-content-center gap-2">
+                    Learn More <i class="fas fa-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Live Glassmorphic Statistics -->
+        <div class="col-lg-5">
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="glass-stat-card text-center h-100">
+                        <div class="fs-4 mb-2 text-warning"><i class="fas fa-search"></i></div>
+                        <div class="fs-1 fw-extrabold lh-1 mb-2">{{ total_found }}</div>
+                        <div class="small opacity-75 text-uppercase fw-bold letter-spacing-1">Active Items</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="glass-stat-card text-center h-100">
+                        <div class="fs-4 mb-2 text-info"><i class="fas fa-handshake"></i></div>
+                        <div class="fs-1 fw-extrabold lh-1 mb-2">{{ total_returned }}</div>
+                        <div class="small opacity-75 text-uppercase fw-bold letter-spacing-1">Returned Safe</div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="glass-stat-card d-flex align-items-center justify-content-between p-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fs-2 text-danger"><i class="fas fa-clipboard-list"></i></div>
+                            <div class="text-start">
+                                <h5 class="fw-bold mb-0 text-white">{{ total_pending_claims }} Pending</h5>
+                                <div class="small opacity-75">Claims under active review</div>
+                            </div>
+                        </div>
+                        <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-bold">Live Status</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Workflow and How It Works Section -->
+<div id="how-it-works" class="py-5 mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-extrabold text-dark" style="font-size: 2.25rem; letter-spacing: -1px;">Integrated Campus Integrity Workflow</h2>
+        <p class="text-muted lead mx-auto" style="max-width: 600px;">Providing a secure loop from reporting an item to verification and safe return.</p>
+    </div>
+    
+    <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="paf-feature-card shadow-sm">
+                <div class="paf-feature-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-3">1. Report Found Valuables</h5>
+                <p class="text-muted small mb-0">
+                    Did you discover a lost phone, wallet, or ID card around the PAF-IAST library, cafeteria, or labs? Instantly log details into our student reports queue for admin review.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="paf-feature-card shadow-sm">
+                <div class="paf-feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-3">2. Admin Verification</h5>
+                <p class="text-muted small mb-0">
+                    Our university administrators verify incoming student reports against physical custody. Once verified, the items become searchable on the main student portal.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="paf-feature-card shadow-sm">
+                <div class="paf-feature-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-3">3. Claim & Handover</h5>
+                <p class="text-muted small mb-0">
+                    Search and claim your lost item. Provide detailed proof of ownership (e.g. locks patterns, serial keys, physical marks). Administrators review and process physically witnessed handovers.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PAF-IAST Community Values Section -->
+<div class="card border-0 shadow-sm overflow-hidden mb-5" style="border-radius: var(--radius); background: linear-gradient(135deg, var(--teal-pale), white);">
+    <div class="card-body p-5">
+        <div class="row align-items-center g-4">
+            <div class="col-md-3 text-center">
+                <div class="bg-teal text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow" style="width: 96px; height: 96px; font-size: 40px;">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+            </div>
+            <div class="col-md-9 text-center text-md-start">
+                <h4 class="fw-bold text-teal-dark mb-2">Our Campus Integrity Standard</h4>
+                <p class="text-muted mb-0">
+                    Honesty and integrity are core pillars of Pak-Austria Fachhochschule. CampusTrace ensures all students behave responsibly. Multiple false or speculative claims trigger automatic flagging restrictions (3 rejections block claim submissions), keeping the portal reliable and trusted.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

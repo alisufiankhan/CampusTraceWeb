@@ -31,8 +31,18 @@ def create_app():
 
     @app.route('/')
     def index():
-        from flask import redirect, url_for
-        return redirect(url_for('auth.login'))
+        from app.models.item import Item
+        from app.models.claim import Claim
+        
+        # Query counts for live visual statistics
+        total_found = Item.query.filter(Item.status.in_(["Found", "UnderReview"])).count()
+        total_returned = Item.query.filter_by(status="Returned").count()
+        total_pending_claims = Claim.query.filter_by(status="Pending").count()
+        
+        return render_template('landing.html', 
+                               total_found=total_found, 
+                               total_returned=total_returned,
+                               total_pending_claims=total_pending_claims)
 
     @app.context_processor
     def inject_counts():
