@@ -162,5 +162,39 @@ class AppTestCase(unittest.TestCase):
         db.session.refresh(student)
         self.assertTrue(student.is_flagged)
 
+    def test_09_competing_claims_on_under_review_item(self):
+        # Setup an item that is already claimed by Student A (UnderReview)
+        student_a = Student(name='Student A', user_id='S002', roll_number='R002')
+        student_a.set_password('pass2')
+        db.session.add(student_a)
+        db.session.commit()
+
+        item = Item(item_id='ITM009', desc='Keys', location='Gym', date_found='2026-05-28', status='UnderReview', item_type='personal')
+        db.session.add(item)
+        db.session.commit()
+
+        claim_a = Claim(claim_id='CLM009A', proof='My keyring', status='Pending', item_id=item.id, person_id=student_a.id)
+        db.session.add(claim_a)
+        db.session.commit()
+
+        # Login as student_b (S001) and submit competing claim for same item (already UnderReview)
+        self.login('S001', 'studentpass', 'student')
+        rv = self.client.post('/claims/submit', data=dict(
+            item_id=item.item_id,
+            proof='I have matching key count'
+        ), follow_redirects=True)
+
+        # Retrieve claims for this item
+        claims = Claim.query.filter_by(item_id=item.id).all()
+        self.assertEqual(len(claims), 2)  # Two competing claims should exist
+        
+        claim_b = Claim.query.filter_by(claim_id='CLM00001').first() # first auto generated id is CLM00001 in cleaned database
+        if not claim_b:
+            claim_b = Claim.query.filter_by(person_id=self.student.id).first()
+            
+        self.assertIsNotNone(claim_b)
+        self.assertEqual(claim_b.status, 'Pending')
+        self.assertEqual(item.status, 'UnderReview')
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

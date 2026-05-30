@@ -97,8 +97,8 @@ def search():
     
     if request.method == 'POST':
         keyword = request.form.get("keyword", "").lower().strip()
-        # Ensure only "Found" items are searchable
-        all_items_list = Item.query.filter_by(status="Found").all()
+        # Ensure only "Found" and "UnderReview" items are searchable
+        all_items_list = Item.query.filter(Item.status.in_(["Found", "UnderReview"])).all()
         
         results = [item for item in all_items_list if keyword in item.desc.lower() or (item.location and keyword in item.location.lower())]
         

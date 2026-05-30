@@ -35,7 +35,7 @@ def submit():
         flash("Item not found. Please try again.", "error")
         return redirect(url_for('items.search'))
         
-    if item.status != "Found":
+    if item.status not in ["Found", "UnderReview"]:
         flash("This item is not available", "error")
         return redirect(url_for('items.search'))
         

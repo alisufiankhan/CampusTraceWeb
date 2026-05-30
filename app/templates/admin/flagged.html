@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header border-0 pb-0 mb-4">
+    <h1 class="mb-1 text-dark">
+        <i class="fas fa-flag text-danger"></i>
+        Flagged Students
+    </h1>
+    <p class="text-muted">Students with 3 or more rejected claims who are temporarily blocked from submitting new claims.</p>
+</div>
+
+<div class="card border-0 shadow-sm" style="border-radius: var(--radius);">
+    <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+            <i class="fas fa-users text-danger"></i> Flagged Student Accounts
+        </h5>
+        <span class="badge bg-danger rounded-pill fs-6 px-3 py-2">{{ students|length }} Flagged</span>
+    </div>
+    <div class="card-body p-0">
+        {% if students %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Student ID</th>
+                        <th>Name</th>
+                        <th>Roll Number</th>
+                        <th>Department</th>
+                        <th>Contact</th>
+                        <th class="text-center">Rejections</th>
+                        <th class="text-end pe-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td class="ps-4"><span class="font-monospace fw-bold text-muted">{{ student.user_id }}</span></td>
+                        <td class="fw-bold">{{ student.name }}</td>
+                        <td>{{ student.roll_number }}</td>
+                        <td><span class="badge bg-teal-pale text-teal-dark">{{ student.dept }}</span></td>
+                        <td><i class="fas fa-phone text-muted me-1"></i> {{ student.contact }}</td>
+                        <td class="text-center">
+                            <span class="badge bg-danger-subtle text-danger fw-bold fs-6 px-3" style="background-color: #FEE2E2 !important; color: #991B1B !important;">
+                                {{ student.rejections }} / 3
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <span class="badge bg-danger text-white"><i class="fas fa-ban me-1"></i> Blocked</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state py-5">
+            <i class="fas fa-check-circle text-success mb-3" style="font-size: 4rem;"></i>
+            <h5 class="fw-bold text-dark">No Flagged Students</h5>
+            <p class="text-muted">All student accounts are currently in good standing.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

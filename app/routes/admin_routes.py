@@ -39,8 +39,4 @@ def reports():
 @admin_routes.route('/flagged')
 def flagged():
     flagged_students_list = Student.query.filter_by(is_flagged=True).all()
-    return render_template('admin/dashboard.html', 
-                           flagged_students_list=flagged_students_list,
-                           total_items=0, pending_claims=0, 
-                           flagged_students=len(flagged_students_list), 
-                           total_students=Student.query.count())
+    return render_template('admin/flagged.html', students=flagged_students_list)
