@@ -65,3 +65,27 @@ def reject_account(student_id):
     db.session.commit()
     flash(f"Account for {student.name} rejected and deleted.", "info")
     return redirect(url_for('admin_routes.pending_accounts'))
+
+@admin_routes.route('/all_students')
+def all_students():
+    students = Student.query.filter_by(is_approved=True).all()
+    return render_template('admin/all_students.html', students=students)
+
+@admin_routes.route('/delete_student/<int:student_id>', methods=['POST'])
+def delete_student(student_id):
+    from app import db
+    student = Student.query.get_or_404(student_id)
+    db.session.delete(student)
+    db.session.commit()
+    flash(f"Student {student.name} has been deleted.", "info")
+    return redirect(url_for('admin_routes.all_students'))
+
+@admin_routes.route('/toggle_flag/<int:student_id>', methods=['POST'])
+def toggle_flag(student_id):
+    from app import db
+    student = Student.query.get_or_404(student_id)
+    student.is_flagged = not student.is_flagged
+    db.session.commit()
+    status = "flagged" if student.is_flagged else "unflagged"
+    flash(f"Student {student.name} has been {status}.", "success")
+    return redirect(url_for('admin_routes.all_students'))
