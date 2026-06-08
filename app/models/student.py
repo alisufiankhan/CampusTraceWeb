@@ -6,6 +6,7 @@ class Student(Person):
     dept = db.Column(db.String(50))
     rejections = db.Column(db.Integer, default=0)
     is_flagged = db.Column(db.Boolean, default=False)
+    is_approved = db.Column(db.Boolean, default=False)
     
     __mapper_args__ = {
         "polymorphic_identity": "student"

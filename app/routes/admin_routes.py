@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app.models.student import Student
 from app.models.report import Report
@@ -22,13 +22,15 @@ def dashboard():
     flagged_students = Student.query.filter_by(is_flagged=True).count()
     total_students = Student.query.count()
     pending_reports = Item.query.filter_by(status="PendingVerification").count()
+    pending_accounts_count = Student.query.filter_by(is_approved=False).count()
     
     return render_template('admin/dashboard.html', 
                            total_items=total_items,
                            pending_claims=pending_claims,
                            flagged_students=flagged_students,
                            total_students=total_students,
-                           pending_reports=pending_reports)
+                           pending_reports=pending_reports,
+                           pending_accounts_count=pending_accounts_count)
 
 @admin_routes.route('/reports')
 def reports():
@@ -40,3 +42,26 @@ def reports():
 def flagged():
     flagged_students_list = Student.query.filter_by(is_flagged=True).all()
     return render_template('admin/flagged.html', students=flagged_students_list)
+
+@admin_routes.route('/pending_accounts')
+def pending_accounts():
+    students = Student.query.filter_by(is_approved=False).all()
+    return render_template('admin/pending_accounts.html', students=students)
+
+@admin_routes.route('/approve_account/<int:student_id>', methods=['POST'])
+def approve_account(student_id):
+    from app import db
+    student = Student.query.get_or_404(student_id)
+    student.is_approved = True
+    db.session.commit()
+    flash(f"Account for {student.name} approved.", "success")
+    return redirect(url_for('admin_routes.pending_accounts'))
+
+@admin_routes.route('/reject_account/<int:student_id>', methods=['POST'])
+def reject_account(student_id):
+    from app import db
+    student = Student.query.get_or_404(student_id)
+    db.session.delete(student)
+    db.session.commit()
+    flash(f"Account for {student.name} rejected and deleted.", "info")
+    return redirect(url_for('admin_routes.pending_accounts'))

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header border-0 pb-0 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-1">
+                <i class="fas fa-user-clock text-purple"></i>
+                Pending Accounts
+            </h1>
+            <p class="text-muted">Review and approve new student registrations</p>
+        </div>
+        <a href="{{ url_for('admin_routes.dashboard') }}" class="btn btn-outline-secondary rounded-pill shadow-sm">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm" style="border-radius: var(--radius);">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="px-4 py-3 text-muted small text-uppercase">Student Name</th>
+                        <th class="px-4 py-3 text-muted small text-uppercase">Registration No</th>
+                        <th class="px-4 py-3 text-muted small text-uppercase text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td class="px-4 py-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-purple text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                    {{ student.name[0]|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ student.name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="badge bg-light text-dark border px-2 py-1"><i class="fas fa-id-card me-1 text-muted"></i>{{ student.roll_number }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-end">
+                            <form action="{{ url_for('admin_routes.approve_account', student_id=student.id) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success rounded-pill px-3 fw-bold shadow-sm" onclick="return confirm('Approve account for {{ student.name }}?');">
+                                    <i class="fas fa-check me-1"></i> Approve
+                                </button>
+                            </form>
+                            <form action="{{ url_for('admin_routes.reject_account', student_id=student.id) }}" method="POST" class="d-inline ms-1">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm" onclick="return confirm('Are you sure you want to delete the registration request for {{ student.name }}?');">
+                                    <i class="fas fa-times me-1"></i> Reject
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="px-4 py-5 text-center text-muted">
+                            <div class="mb-3">
+                                <i class="fas fa-check-circle text-success" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                            <h5>All caught up!</h5>
+                            <p class="mb-0">There are no pending accounts to review.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

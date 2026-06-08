@@ -74,6 +74,19 @@
             </div>
         </div>
     </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100 text-white" style="border-radius: var(--radius); background: linear-gradient(135deg, #8B5CF6, #6D28D9);">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px; font-size: 24px; background: rgba(255,255,255,0.2);">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <div>
+                    <div class="small fw-bold text-uppercase mb-1 opacity-75">Pending Accounts</div>
+                    <div class="fs-2 fw-bold lh-1">{{ pending_accounts_count }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row g-4 mb-5">
@@ -125,6 +138,22 @@
                                     <p class="text-muted small mb-0">Verify items reported by students</p>
                                     {% if pending_reports > 0 %}
                                     <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 shadow-sm">{{ pending_reports }} Pending</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <a href="{{ url_for('admin_routes.pending_accounts') }}" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                                <div class="card-body text-center p-4 position-relative">
+                                    <div class="bg-light text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; color: #8B5CF6 !important;">
+                                        <i class="fas fa-user-check fs-4"></i>
+                                    </div>
+                                    <h6 class="fw-bold text-dark mb-2">Review Accounts</h6>
+                                    <p class="text-muted small mb-0">Approve new students</p>
+                                    {% if pending_accounts_count > 0 %}
+                                    <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 shadow-sm">{{ pending_accounts_count }} Pending</span>
                                     {% endif %}
                                 </div>
                             </div>

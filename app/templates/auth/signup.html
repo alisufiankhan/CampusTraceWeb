@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <style>
-/* Override base layout for full screen login */
+/* Override base layout for full screen signup */
 body { background: white; }
 .navbar, footer { display: none; }
 .main-content { padding: 0 !important; }
@@ -11,26 +11,22 @@ body { background: white; }
 <div class="row g-0 vh-100">
     <!-- Left Half (Hidden on mobile) -->
     <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center text-white" 
-         style="background: linear-gradient(135deg, var(--teal-dark), var(--teal)); padding: 4rem;">
+         style="background: linear-gradient(135deg, var(--teal), var(--teal-dark)); padding: 4rem;">
         <div style="max-width: 400px; width: 100%;">
-            <i class="fas fa-map-marker-alt mb-4" style="font-size: 80px;"></i>
-            <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">CampusTrace</h1>
-            <p style="font-size: 1.1rem; opacity: 0.7; margin-bottom: 2.5rem;">Lost & Found Management</p>
+            <i class="fas fa-user-plus mb-4" style="font-size: 80px;"></i>
+            <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">Join CampusTrace</h1>
+            <p style="font-size: 1.1rem; opacity: 0.7; margin-bottom: 2.5rem;">Register to access the Lost & Found Management System</p>
             
             <hr style="border-top: 2px solid rgba(255,255,255,0.2); margin-bottom: 2.5rem;">
             
             <ul class="list-unstyled">
                 <li class="mb-3 d-flex align-items-center gap-3">
                     <i class="fas fa-check-circle" style="color: var(--mint); font-size: 1.2rem;"></i>
-                    <span style="font-size: 1.1rem; font-weight: 500;">Formal claim process</span>
+                    <span style="font-size: 1.1rem; font-weight: 500;">Report lost items easily</span>
                 </li>
                 <li class="mb-3 d-flex align-items-center gap-3">
                     <i class="fas fa-check-circle" style="color: var(--mint); font-size: 1.2rem;"></i>
-                    <span style="font-size: 1.1rem; font-weight: 500;">Item tracking & status</span>
-                </li>
-                <li class="d-flex align-items-center gap-3">
-                    <i class="fas fa-check-circle" style="color: var(--mint); font-size: 1.2rem;"></i>
-                    <span style="font-size: 1.1rem; font-weight: 500;">Full accountability</span>
+                    <span style="font-size: 1.1rem; font-weight: 500;">Claim found belongings</span>
                 </li>
             </ul>
         </div>
@@ -45,7 +41,6 @@ body { background: white; }
         </div>
         
         <div style="max-width: 380px; width: 100%;">
-            <!-- Flash messages for login page specifically -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -61,19 +56,27 @@ body { background: white; }
                 {% endif %}
             {% endwith %}
 
-            <h2 style="font-weight: 800; font-size: 1.8rem; margin-bottom: 0.2rem; color: var(--text-dark);">Welcome back</h2>
-            <p class="text-muted mb-4 small">Sign in to your account to continue</p>
+            <h2 style="font-weight: 800; font-size: 1.8rem; margin-bottom: 0.2rem; color: var(--text-dark);">Create an account</h2>
+            <p class="text-muted mb-4 small">Sign up as a student. Admin approval required to login.</p>
             
-            <form method="POST" action="{{ url_for('auth.login') }}">
+            <form method="POST" action="{{ url_for('auth.signup') }}">
                 <div class="mb-3">
-                    <label for="user_id" class="form-label d-none">User ID</label>
+                    <label for="name" class="form-label d-none">Full Name</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="roll_number" class="form-label d-none">Registration No</label>
                     <div class="input-group input-group-lg">
                         <span class="input-group-text bg-transparent"><i class="fas fa-id-card"></i></span>
-                        <input type="text" class="form-control" id="user_id" name="user_id" placeholder="User ID" required>
+                        <input type="text" class="form-control" id="roll_number" name="roll_number" placeholder="Registration No (e.g. S004)" required>
                     </div>
                 </div>
                 
-                <div class="mb-3">
+                <div class="mb-4">
                     <label for="password" class="form-label d-none">Password</label>
                     <div class="input-group input-group-lg">
                         <span class="input-group-text bg-transparent"><i class="fas fa-lock"></i></span>
@@ -84,24 +87,12 @@ body { background: white; }
                     </div>
                 </div>
                 
-                <div class="mb-4">
-                    <label for="role" class="form-label d-none">Role</label>
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text bg-transparent"><i class="fas fa-user-tag"></i></span>
-                        <select class="form-select" id="role" name="role" required>
-                            <option value="student">Student</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                </div>
-                
                 <button type="submit" class="btn btn-teal btn-lg w-100 fw-bold py-3 mb-3">
-                    <i class="fas fa-sign-in-alt me-2"></i> Sign In
+                    <i class="fas fa-user-plus me-2"></i> Register
                 </button>
                 
                 <div class="text-center">
-                    <p class="text-muted small mb-2">Don't have an account? <a href="{{ url_for('auth.signup') }}" class="text-teal fw-bold text-decoration-none" style="color: var(--teal);">Sign up</a></p>
-                    <p class="text-muted small mb-0">Contact admin if you need access</p>
+                    <p class="text-muted small mb-0">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-teal fw-bold text-decoration-none" style="color: var(--teal);">Sign In</a></p>
                 </div>
             </form>
         </div>

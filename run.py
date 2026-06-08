@@ -22,7 +22,8 @@ def seed_data():
             contact="0301-1234567",
             roll_number="B25F0559AI154",
             dept="AI",
-            role="student"
+            role="student",
+            is_approved=True
         )
         s1.set_password("ali123")
         
@@ -32,7 +33,8 @@ def seed_data():
             contact="0302-1234567",
             roll_number="B25F2267AI157",
             dept="AI",
-            role="student"
+            role="student",
+            is_approved=True
         )
         s2.set_password("amina123")
         
@@ -42,7 +44,8 @@ def seed_data():
             contact="0303-1234567",
             roll_number="B25F2677AI147",
             dept="AI",
-            role="student"
+            role="student",
+            is_approved=True
         )
         s3.set_password("umama123")
         
