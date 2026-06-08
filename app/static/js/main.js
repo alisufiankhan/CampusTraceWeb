@@ -52,6 +52,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // 3. Confirm dialogs
     const confirmForms = document.querySelectorAll('form[action*="/approve"], form[action*="/reject"], form[action*="/dispute"], form[action*="/expire"]');
     confirmForms.forEach(form => {
+        // Skip if form button already has an inline confirm
+        if (form.querySelector('button[onclick*="confirm"]')) return;
+        
         form.addEventListener('submit', function(e) {
             let msg = 'Are you sure you want to proceed?';
             if (form.action.includes('/approve')) msg = 'Approve this claim?';

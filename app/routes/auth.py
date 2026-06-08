@@ -52,6 +52,7 @@ def signup():
     if request.method == 'POST':
         name = request.form.get('name')
         roll_number = request.form.get('roll_number')
+        dept = request.form.get('dept')
         password = request.form.get('password')
         
         # Check if user already exists
@@ -63,6 +64,7 @@ def signup():
                 name=name,
                 user_id=roll_number,
                 roll_number=roll_number,
+                dept=dept,
                 role="student",
                 is_approved=False
             )
